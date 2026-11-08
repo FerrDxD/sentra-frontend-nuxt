@@ -1,174 +1,284 @@
 <template>
-  <div>
-    <!-- Hero Section -->
-    <div class="mt-[70px] py-[7rem] md:pt-[7rem] md:pb-[5rem] relative overflow-hidden bg-[radial-gradient(ellipse_80%_60%_at_70%_0%,rgba(99,102,241,0.1),transparent),radial-gradient(ellipse_60%_50%_at_10%_100%,rgba(168,85,247,0.07),transparent)]">
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(99,102,241,0.06)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.05)_0%,transparent_50%)] pointer-events-none"></div>
-      
-      <!-- Blobs -->
-      <div class="absolute w-[500px] h-[500px] rounded-full blur-[80px] pointer-events-none opacity-[0.35] bg-indigo-500/15 top-[-200px] right-[-150px]"></div>
-      <div class="absolute w-[300px] h-[300px] rounded-full blur-[80px] pointer-events-none opacity-[0.35] bg-purple-500/12 bottom-[-100px] left-[5%]"></div>
-
-      <div class="relative z-10 text-center px-4 max-w-[1120px] mx-auto">
-        <h1 class="text-[clamp(2rem,5vw,3.8rem)] font-[800] leading-[1.12] mb-[1.5rem] tracking-[-1px] text-text-main">
-          Akselerasi Generasi Muda<br>
-          bersama <span class="bg-gradient-to-br from-[#6366f1] to-[#a855f7] bg-clip-text text-transparent">Nawasena</span>
+  <div class="bg-bg-primary text-text-main transition-colors duration-300">
+    <!-- ── Hero ─────────────────────────────────────────────── -->
+    <section aria-label="Sponsorship" class="pt-28 md:pt-36 pb-16 md:pb-20 text-center relative">
+      <div class="max-w-[1120px] mx-auto px-4 md:px-6">
+        <h1 class="text-[clamp(2rem,6vw,3.6rem)] font-extrabold tracking-tight leading-[1.1] mb-5 text-text-main">
+          Akselerasi generasi muda<br>bersama <span class="text-accent">Nawasena</span>
         </h1>
-        <p class="text-text-muted text-[1.1rem] max-w-[560px] mx-auto mb-[2.5rem] leading-[1.75]">Jadilah bagian dari langkah bermakna kami. OSIS SMAN 2 Jonggol membuka peluang kerjasama eksklusif bagi Mitra yang memiliki visi sejalan.</p>
-        
-        <div class="flex gap-4 justify-center flex-wrap">
-          <a href="#sponsor-form" class="bg-gradient-to-br from-[#6366f1] to-[#a855f7] text-white border-none py-[14px] px-[32px] rounded-[50px] font-[700] text-[0.95rem] inline-flex items-center gap-[8px] transition-all duration-300 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:-translate-y-[3px] hover:shadow-[0_14px_30px_rgba(99,102,241,0.45)] no-underline">
-            Kirim Penawaran <Icon name="material-symbols:arrow-forward" />
+        <p class="text-text-muted text-[1rem] md:text-[1.1rem] max-w-[600px] mx-auto mb-8 leading-relaxed">
+          Jadilah bagian dari langkah bermakna kami. OSIS SMAN 2 Jonggol membuka peluang kerjasama eksklusif bagi Mitra yang memiliki visi sejalan.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            href="#sponsor-form"
+            @click.prevent="scrollToId('sponsor-form')"
+            class="inline-flex items-center justify-center gap-2 bg-accent text-white rounded-[16px] px-7 py-3.5 font-semibold text-[0.95rem] no-underline transition-colors duration-200 hover:bg-accent-hover shadow-md"
+          >
+            Kirim Penawaran
+            <Icon name="material-symbols:arrow-forward" class="text-[1.1rem]" aria-hidden="true" />
           </a>
-          <a href="#sponsor-tiers" class="bg-transparent text-accent border-[2px] border-accent py-[12px] px-[30px] rounded-[50px] font-[700] text-[0.95rem] inline-flex items-center gap-[8px] transition-all duration-300 hover:bg-accent hover:text-white hover:-translate-y-[3px] no-underline">
-            Lihat Paket Tier
+          <a
+            href="#sponsor-tiers"
+            @click.prevent="scrollToId('sponsor-tiers')"
+            class="inline-flex items-center justify-center gap-2 border border-accent/30 text-accent rounded-[16px] px-7 py-3.5 font-semibold text-[0.95rem] no-underline transition-colors duration-200 hover:bg-accent-soft"
+          >
+            Lihat Paket
+            <Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-[1.2rem]" aria-hidden="true" />
           </a>
         </div>
       </div>
-    </div>
+    </section>
 
-    <main class="max-w-[1120px] mx-auto px-4 md:px-6 relative z-10">
-      
-      <!-- Stats Row -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-24 -mt-16 relative z-20 px-2 md:px-0">
-        <SponsorStatCard icon="material-symbols:group" :target="800" label="Siswa Aktif di Sekolah" />
-        <SponsorStatCard icon="material-symbols:calendar-month" :target="12" suffix="+" label="Program Kerja per Tahun" />
-        <SponsorStatCard icon="material-symbols:emoji-events" :target="3" label="Event Besar per Semester" />
-        <SponsorStatCard icon="material-symbols:public" :target="100" suffix="%" label="Aktivitas Terdokumentasi Digital" />
-      </div>
+    <main class="max-w-[1120px] mx-auto px-4 md:px-6 pb-4">
+      <!-- ── Stats ──────────────────────────────────────────── -->
+      <section aria-label="Statistik" class="pb-16 md:pb-20">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <SponsorStatCard
+            v-for="stat in stats"
+            :key="stat.label"
+            :icon="stat.icon"
+            :target="stat.value"
+            :suffix="stat.suffix"
+            :label="stat.label"
+          />
+        </div>
+      </section>
 
-      <div class="h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent my-[5rem]" id="sponsor-tiers"></div>
-
-      <!-- Tiers -->
-      <div class="text-center mb-10">
-        <h2 class="text-[1.8rem] md:text-[2.2rem] font-[800] mb-2 text-text-main">Paket Sponsorship</h2>
-        <p class="text-text-muted text-[1rem]">Pilih tingkatan yang sesuai dengan kontribusi dan kebutuhan visibilitas Anda.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[1.5rem] mb-[6rem] items-start">
-      <SponsorTierCard 
-          colorTheme="amethyst"
-          icon="💜"
-          label="Amethyst"
-          title="Paket Dasar"
-          price="Rp75.000"
-          desc="Paket dasar untuk meningkatkan visibilitas brand melalui media publikasi acara."
-          :perks="['Penempatan Logo di Seluruh Media Publikasi (Flyer, Banner, Frame)']"
+      <!-- ── Tiers ──────────────────────────────────────────── -->
+      <section id="sponsor-tiers" aria-labelledby="tiers-title" class="pb-16 md:pb-20 scroll-mt-24">
+        <SponsorSectionHeading
+          id="tiers-title"
+          title="Paket Sponsorship"
+          subtitle="Pilih tingkatan yang sesuai dengan kontribusi dan kebutuhan visibilitas Anda."
         />
-        <SponsorTierCard 
-          colorTheme="topaz"
-          icon="🧡"
-          label="Topaz"
-          title="Paket Standar"
-          price="Rp150.000"
-          desc="Paket standar dengan tambahan eksposur yang lebih luas untuk memperkuat awareness brand."
-          :perks="['Penempatan Logo di Seluruh Media Publikasi (Flyer, Banner, Frame)', 'Promosi Dalam Bentuk Video Melalui Media Sosial']"
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-10 items-stretch">
+          <SponsorTierCard
+            v-for="tier in tiers"
+            :key="tier.id"
+            :icon="tier.icon"
+            :label="tier.label"
+            :title="tier.title"
+            :desc="tier.desc"
+            :price="tier.price"
+            :perks="tier.perks"
+            :featured="tier.featured"
+          />
+        </div>
+      </section>
+
+      <!-- ── Partner types ──────────────────────────────────── -->
+      <section aria-labelledby="types-title" class="pb-16 md:pb-20">
+        <SponsorSectionHeading
+          id="types-title"
+          title="Tipe Kemitraan"
+          subtitle="Lebih dari sekadar sponsor — kami percaya pada kolaborasi yang saling menguntungkan dan bermakna."
         />
-        <SponsorTierCard 
-          colorTheme="sapphire"
-          icon="💎"
-          label="Sapphire"
-          title="Paket Eksklusif"
-          price="Rp200.000"
-          desc="Paket eksklusif dengan manfaat maksimal, promosi menyeluruh dan fasilitas selama acara."
-          :perks="['Penempatan Logo di Flyer, Banner, dan Frame Instastory', 'Promosi Dalam Bentuk Video Melalui Media Sosial', 'Penyebutan Oleh Master of Ceremony', 'Kesempatan Untuk Membuka Kios saat Acara Berlangsung', 'Mendapatkan 1 (satu) Tenda Untuk Digunakan Selama Acara Berlangsung']"
-          isFeatured
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div
+            v-for="type in partnerTypes"
+            :key="type.title"
+            class="group relative bg-bg-card rounded-[16px] p-7 border border-border shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+          >
+            <span class="w-12 h-12 rounded-[10px] flex items-center justify-center bg-accent-soft text-accent mb-5">
+              <Icon :name="type.icon" class="text-[1.5rem]" aria-hidden="true" />
+            </span>
+            <h3 class="text-[1.15rem] font-bold text-text-main mb-2">{{ type.title }}</h3>
+            <p class="text-text-muted text-[0.9rem] leading-relaxed">{{ type.desc }}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Partners marquee ───────────────────────────────── -->
+      <section aria-labelledby="partners-title" class="pb-16 md:pb-20">
+        <SponsorSectionHeading
+          id="partners-title"
+          title="Mitra Kami"
+          subtitle="Terima kasih kepada seluruh pihak yang telah mendukung perjalanan Nawasena."
         />
-        <SponsorTierCard 
-          colorTheme="alex"
-          icon="🌟"
-          label="Alexandrite"
-          title="Paket Premium"
-          price="Rp350.000"
-          desc="Paket premium yang memberikan peluang promosi lebih optimal serta interaksi langsung."
-          :perks="['Penempatan Logo di Flyer, Banner, dan Frame Instastory', 'Promosi Dalam Bentuk Video Melalui Media Sosial dan Penyebutan Oleh MC', 'Kesempatan Untuk Membuka Kios saat Acara Berlangsung', 'Kesempatan berinteraksi secara langsung kepada siswa-siswi selama acara berlangsung', 'Prioritas eksposur dan fasilitas paling lengkap selama acara']"
-        />
-      </div>
+        <div class="partner-marquee relative overflow-hidden py-1">
+          <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-bg-primary to-transparent z-10 pointer-events-none hidden md:block" aria-hidden="true" />
+          <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-bg-primary to-transparent z-10 pointer-events-none hidden md:block" aria-hidden="true" />
 
-      <div class="h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent my-[5rem]"></div>
-
-      <!-- PARTNER TYPES -->
-      <div class="text-center mb-10">
-        <h2 class="text-[1.8rem] md:text-[2.2rem] font-[800] mb-2 text-text-main">Tipe Kemitraan</h2>
-        <p class="text-text-muted text-[1rem]">Lebih dari sekadar sponsor — kami percaya pada kolaborasi yang saling menguntungkan dan bermakna.</p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-[2rem] mb-[6rem]">
-        <div class="bg-bg-card rounded-[20px] p-[2.5rem_2rem] border border-black/5 dark:border-white/5 shadow-sm relative overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] group">
-          <div class="absolute bottom-0 left-0 right-0 h-[4px] bg-gradient-to-r from-[#6366f1] to-[#a855f7] origin-left scale-x-0 transition-transform duration-400 group-hover:scale-x-100"></div>
-          <span class="text-[2.8rem] block mb-[1.4rem]">🏢</span>
-          <h3 class="text-[1.25rem] font-[700] mb-[0.7rem] text-text-main">Mitra Bisnis & UMKM</h3>
-          <p class="text-text-muted text-[0.93rem] leading-[1.75] m-0">Untuk perusahaan dan pelaku usaha yang ingin meningkatkan brand awareness di kalangan pelajar dan keluarganya.</p>
+          <div class="partner-track flex w-max motion-reduce:w-auto motion-reduce:flex-wrap motion-reduce:gap-3 motion-reduce:justify-center">
+            <div class="flex gap-4 pr-4 shrink-0 motion-reduce:flex-wrap motion-reduce:pr-0 motion-reduce:justify-center">
+              <span
+                v-for="partner in partners"
+                :key="partner"
+                class="inline-flex items-center gap-2 bg-bg-card border border-border rounded-[14px] px-5 py-3 font-semibold text-[0.9rem] text-text-muted shadow whitespace-nowrap"
+              >
+                <span class="w-2 h-2 rounded-full bg-accent/50 shrink-0" aria-hidden="true"></span>
+                {{ partner }}
+              </span>
+            </div>
+            <div class="flex gap-4 pr-4 shrink-0 motion-reduce:hidden" aria-hidden="true">
+              <span
+                v-for="partner in partners"
+                :key="`dup-${partner}`"
+                class="inline-flex items-center gap-2 bg-bg-card border border-border rounded-[14px] px-5 py-3 font-semibold text-[0.9rem] text-text-muted shadow whitespace-nowrap"
+              >
+                <span class="w-2 h-2 rounded-full bg-accent/50 shrink-0" aria-hidden="true"></span>
+                {{ partner }}
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="bg-bg-card rounded-[20px] p-[2.5rem_2rem] border border-black/5 dark:border-white/5 shadow-sm relative overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] group">
-          <div class="absolute bottom-0 left-0 right-0 h-[4px] bg-gradient-to-r from-[#6366f1] to-[#a855f7] origin-left scale-x-0 transition-transform duration-400 group-hover:scale-x-100"></div>
-          <span class="text-[2.8rem] block mb-[1.4rem]">🎓</span>
-          <h3 class="text-[1.25rem] font-[700] mb-[0.7rem] text-text-main">Mitra Kampus & Institusi</h3>
-          <p class="text-text-muted text-[0.93rem] leading-[1.75] m-0">Untuk universitas dan lembaga pendidikan yang ingin menjangkau calon mahasiswa potensial.</p>
+      </section>
+
+      <!-- ── CTA strip ──────────────────────────────────────── -->
+      <section aria-label="Hubungi kami" class="pb-16 md:pb-20">
+        <div class="relative overflow-hidden bg-accent rounded-[24px] px-6 py-12 md:px-12 md:py-14 text-center shadow-lg">
+          <div class="absolute w-[400px] h-[400px] rounded-full bg-white/5 -top-[180px] -left-[120px] pointer-events-none" aria-hidden="true"></div>
+          <div class="absolute w-[280px] h-[280px] rounded-full bg-white/5 -bottom-[140px] right-[4%] pointer-events-none" aria-hidden="true"></div>
+
+          <h2 class="relative z-10 text-white text-[1.6rem] md:text-[2rem] font-extrabold mb-3">
+            Ada Pertanyaan? Hubungi Kami Langsung
+          </h2>
+          <p class="relative z-10 text-white/85 text-[0.98rem] max-w-[480px] mx-auto mb-8 leading-relaxed">
+            Tim Sekretariat OSIS Nawasena siap mendiskusikan paket kerjasama yang paling sesuai dengan kebutuhan Anda.
+          </p>
+          <div class="relative z-10 flex flex-col sm:flex-row flex-wrap gap-3 justify-center">
+            <a
+              href="mailto:osissmanduajonggol@gmail.com"
+              class="inline-flex items-center gap-2.5 border border-white/30 text-white rounded-[16px] px-5 py-3 text-[0.9rem] font-semibold no-underline transition-colors duration-200 hover:bg-white/10"
+            >
+              <Icon name="material-symbols:mail" class="text-[1.1rem]" aria-hidden="true" />
+              Email Kami
+            </a>
+            <a
+              href="https://wa.me/6282299234269"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-2.5 border border-white/30 text-white rounded-[16px] px-5 py-3 text-[0.9rem] font-semibold no-underline transition-colors duration-200 hover:bg-white/10"
+            >
+              <Icon name="mdi:whatsapp" class="text-[1.1rem]" aria-hidden="true" />
+              WhatsApp
+            </a>
+            <a
+              href="https://www.instagram.com/ofc.osissmandjo/"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-2.5 border border-white/30 text-white rounded-[16px] px-5 py-3 text-[0.9rem] font-semibold no-underline transition-colors duration-200 hover:bg-white/10"
+            >
+              <Icon name="mdi:instagram" class="text-[1.1rem]" aria-hidden="true" />
+              Instagram
+            </a>
+          </div>
         </div>
-        <div class="bg-bg-card rounded-[20px] p-[2.5rem_2rem] border border-black/5 dark:border-white/5 shadow-sm relative overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] group">
-          <div class="absolute bottom-0 left-0 right-0 h-[4px] bg-gradient-to-r from-[#6366f1] to-[#a855f7] origin-left scale-x-0 transition-transform duration-400 group-hover:scale-x-100"></div>
-          <span class="text-[2.8rem] block mb-[1.4rem]">🤝</span>
-          <h3 class="text-[1.25rem] font-[700] mb-[0.7rem] text-text-main">Mitra Alumni</h3>
-          <p class="text-text-muted text-[0.93rem] leading-[1.75] m-0">Untuk alumni yang ingin berkontribusi balik ke almamater.</p>
-        </div>
-      </div>
+      </section>
 
-      <div class="h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent my-[5rem]"></div>
-
-      <!-- Marquee -->
-      <div class="text-center mb-10">
-        <h2 class="text-[1.8rem] md:text-[2.2rem] font-[800] mb-2 text-text-main">Mitra Kami</h2>
-        <p class="text-text-muted text-[1rem]">Terima kasih kepada seluruh pihak yang telah mendukung perjalanan Nawasena 2025/2026.</p>
-      </div>
-      <div class="overflow-hidden relative py-[0.5rem] mb-[6rem]">
-        <div class="absolute inset-y-0 w-[100px] left-0 bg-gradient-to-r from-bg-primary to-transparent z-[2] pointer-events-none"></div>
-        <div class="absolute inset-y-0 w-[100px] right-0 bg-gradient-to-l from-bg-primary to-transparent z-[2] pointer-events-none"></div>
-        
-        <div class="flex gap-[1.2rem] w-max animate-[scroll-left_22s_linear_infinite] hover:animate-pause">
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">🍹</span> Jeruk Mood</div>
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">🍣</span> Dimsum Hallo Dek</div>
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">🍗</span> SempolCelup RJ</div>
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">🏥</span> Klinik Sehat Bersama</div>
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">🎨</span> Nyareat Konveksi</div>
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">🍜</span> Warung Barokah</div>
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">📷</span> Dyputu Studio</div>
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">🌿</span> Green Living Co.</div>
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">🎵</span> Audio Nada Studio</div>
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">📦</span> Ekspedisi Kilat</div>
-          <!-- DUPLICATE FOR SEAMLESS SCROLL -->
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">🍹</span> Jeruk Mood</div>
-          <div class="bg-bg-card border border-indigo-500/12 rounded-[14px] p-[1rem_1.8rem] flex items-center gap-[0.8rem] whitespace-nowrap font-[600] text-[0.9rem] text-text-muted shadow-sm transition-all duration-300 hover:border-accent hover:text-accent hover:scale-[1.03] cursor-default"><span class="text-[1.4rem]">🍣</span> Dimsum Hallo Dek</div>
-        </div>
-      </div>
-
-      <div class="h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent my-[5rem]"></div>
-
-      <!-- CTA STRIP -->
-      <div class="bg-gradient-to-br from-[#6366f1] via-[#8b5cf6] to-[#a855f7] rounded-[28px] p-[4rem_1.5rem] md:p-[4rem_3rem] text-center mb-[6rem] relative overflow-hidden">
-        <div class="absolute w-[450px] h-[450px] rounded-full bg-white/5 -top-[200px] -left-[100px]"></div>
-        <div class="absolute w-[300px] h-[300px] rounded-full bg-white/5 -bottom-[150px] right-[5%]"></div>
-        <h2 class="text-white text-[1.8rem] md:text-[2rem] font-[800] mb-[0.8rem] relative z-10">Ada Pertanyaan? Hubungi Kami Langsung</h2>
-        <p class="text-white/85 text-[1rem] max-w-[480px] mx-auto mb-[2rem] leading-[1.7] relative z-10">Tim Sekretariat OSIS Nawasena siap mendiskusikan paket kerjasama yang paling sesuai dengan kebutuhan Anda.</p>
-        <div class="flex gap-[0.9rem] justify-center auto-cols-auto flex-wrap relative z-10">
-          <a href="mailto:osissmanduajonggol@gmail.com" class="bg-white/15 text-white border-[1.5px] border-white/30 p-[10px_22px] rounded-[50px] text-[0.88rem] font-[600] no-underline inline-flex items-center gap-[7px] backdrop-blur transition-colors duration-300 hover:bg-white/25">
-            <Icon name="material-symbols:mail" size="16" /> Email Kami
-          </a>
-          <a href="https://wa.me/6282299234269" class="bg-white/15 text-white border-[1.5px] border-white/30 p-[10px_22px] rounded-[50px] text-[0.88rem] font-[600] no-underline inline-flex items-center gap-[7px] backdrop-blur transition-colors duration-300 hover:bg-white/25" target="_blank">
-            <Icon name="material-symbols:chat" size="16" /> WhatsApp
-          </a>
-          <a href="https://www.instagram.com/ofc.osissmandjo/" class="bg-white/15 text-white border-[1.5px] border-white/30 p-[10px_22px] rounded-[50px] text-[0.88rem] font-[600] no-underline inline-flex items-center gap-[7px] backdrop-blur transition-colors duration-300 hover:bg-white/25" target="_blank">
-            <Icon name="material-symbols:photo-camera" size="16" /> Instagram
-          </a>
-        </div>
-      </div>
-
-      <SponsorForm />
+      <!-- ── Form ───────────────────────────────────────────── -->
+      <section class="pb-8">
+        <SponsorForm />
+      </section>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-useHead({
-  title: 'Sponsorship — OSPK Nawasena'
+const stats = [
+  { icon: 'material-symbols:group', value: 800, suffix: '', label: 'Siswa Aktif di Sekolah' },
+  { icon: 'material-symbols:calendar-month', value: 12, suffix: '+', label: 'Program Kerja per Tahun' },
+  { icon: 'material-symbols:emoji-events', value: 3, suffix: '', label: 'Event Besar per Semester' },
+  { icon: 'material-symbols:public', value: 100, suffix: '%', label: 'Aktivitas Terdokumentasi Digital' },
+]
+
+const tiers = [
+  {
+    id: 'amethyst',
+    icon: 'material-symbols:auto-awesome',
+    label: 'Amethyst',
+    title: 'Paket Dasar',
+    price: 'Rp75.000',
+    desc: 'Paket dasar untuk meningkatkan visibilitas brand melalui media publikasi acara.',
+    perks: ['Penempatan Logo di Seluruh Media Publikasi (Flyer, Banner, Frame)'],
+    featured: false,
+  },
+  {
+    id: 'topaz',
+    icon: 'material-symbols:grade',
+    label: 'Topaz',
+    title: 'Paket Standar',
+    price: 'Rp150.000',
+    desc: 'Paket standar dengan tambahan eksposur yang lebih luas untuk memperkuat awareness brand.',
+    perks: [
+      'Semua benefit Paket Amethyst',
+      'Promosi Dalam Bentuk Video Melalui Media Sosial',
+    ],
+    featured: false,
+  },
+  {
+    id: 'sapphire',
+    icon: 'material-symbols:diamond',
+    label: 'Sapphire',
+    title: 'Paket Eksklusif',
+    price: 'Rp200.000',
+    desc: 'Paket eksklusif dengan manfaat maksimal, promosi menyeluruh dan fasilitas selama acara.',
+    perks: [
+      'Semua benefit Paket Topaz',
+      'Penyebutan Oleh Master of Ceremony',
+      'Kesempatan Untuk Membuka Kios saat Acara Berlangsung',
+    ],
+    featured: true,
+  },
+  {
+    id: 'alexandrite',
+    icon: 'material-symbols:workspace-premium',
+    label: 'Alexandrite',
+    title: 'Paket Premium',
+    price: 'Rp350.000',
+    desc: 'Paket premium yang memberikan peluang promosi lebih optimal serta interaksi langsung.',
+    perks: [
+      'Semua benefit Paket Sapphire',
+      'Kesempatan berinteraksi secara langsung kepada siswa-siswi selama acara berlangsung',
+      'Prioritas eksposur dan fasilitas paling lengkap selama acara',
+    ],
+    featured: false,
+  },
+]
+
+const partnerTypes = [
+  {
+    icon: 'material-symbols:storefront',
+    title: 'Mitra Bisnis & UMKM',
+    desc: 'Untuk perusahaan dan pelaku usaha yang ingin meningkatkan brand awareness di kalangan pelajar dan keluarganya.',
+  },
+  {
+    icon: 'material-symbols:school',
+    title: 'Mitra Kampus & Institusi',
+    desc: 'Untuk universitas dan lembaga pendidikan yang ingin menjangkau calon mahasiswa potensial.',
+  },
+  {
+    icon: 'material-symbols:handshake',
+    title: 'Mitra Alumni',
+    desc: 'Untuk alumni yang ingin berkontribusi balik ke almamater.',
+  },
+]
+
+const partners = [
+  'Jeruk Mood',
+  'Dimsum Hallo Dek',
+  'Sempol Celup RJ',
+  'Blink Photobox',
+  'Nyareat Konveksi',
+  'Ice Cream 88',
+  'Dyputu Studio',
+  'Green Living Co.',
+  'Kedai Jajan Mba Pepi',
+  'Ekspedisi Kilat',
+]
+
+function scrollToId(id: string) {
+  if (import.meta.client) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
+
+useSeoMeta({
+  title: 'Sponsorship',
+  description: 'Sponsorship & kemitraan OSIS Nawasena SMAN 2 Jonggol — pilih paket sponsorship, kenali tipe kemitraan, dan ajukan kerjasama.',
+  ogTitle: 'Sponsorship — OSIS Nawasena',
+  ogDescription: 'Peluang kerjasama dan sponsorship bersama OSIS Nawasena SMAN 2 Jonggol.',
 })
 </script>
 
@@ -176,5 +286,19 @@ useHead({
 @keyframes scroll-left {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
+}
+
+.partner-track {
+  animation: scroll-left 30s linear infinite;
+}
+
+.partner-marquee:hover .partner-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partner-track {
+    animation: none;
+  }
 }
 </style>
