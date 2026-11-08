@@ -110,6 +110,12 @@
         background-color: var(--bg-primary);
     }
 
+    /* Themed text selection — part of the design system, not a browser default. */
+    ::selection {
+        background: rgba(99, 102, 241, 0.28);
+        color: inherit;
+    }
+
     /* Light mode only — ambient gradient layered on top of the flat bg-primary.
        Fixed so it doesn't scroll, giving depth without affecting layout. */
     body:not(.dark-theme):not(.dark) {
@@ -151,6 +157,26 @@
     50% { height: 14px; }
 }
 
+/* ── Hall of Fame — "Nawasena sky" ─────────────────────────── */
+@keyframes hof-twinkle {
+    0%, 100% { opacity: 0.30; transform: scale(1); }
+    50%      { opacity: 0.85; transform: scale(1.25); }
+}
+@keyframes hof-twinkle-bright {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50%      { opacity: 1;    transform: scale(1.35); }
+}
+@keyframes hof-shoot {
+    0%   { transform: translate3d(0, 0, 0) rotate(-35deg); opacity: 0; }
+    6%   { opacity: 1; }
+    22%  { transform: translate3d(-52vw, 30vw, 0) rotate(-35deg); opacity: 0; }
+    100% { transform: translate3d(-52vw, 30vw, 0) rotate(-35deg); opacity: 0; }
+}
+@keyframes hof-draw-line {
+    from { stroke-dashoffset: var(--line-len, 100); }
+    to   { stroke-dashoffset: 0; }
+}
+
 /* ── Page Transitions: dokumentasi ⇄ article (modal-like slide-up) ────────── */
 .article-slide-enter-active,
 .article-slide-leave-active {
@@ -177,5 +203,17 @@
     .article-slide-enter-from,
     .article-slide-leave-to {
         transform: none;
+    }
+    .hof-star,
+    .hof-shooting-star,
+    .hof-constellation-line {
+        animation: none !important;
+    }
+    .hof-constellation-line {
+        stroke-dashoffset: 0 !important;
+    }
+    .cm-node {
+        opacity: 1 !important;
+        transform: none !important;
     }
 }

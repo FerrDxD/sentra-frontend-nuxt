@@ -1,62 +1,117 @@
 <template>
-  <div class="bg-bg-card rounded-[24px] p-[2.5rem_2rem] border border-indigo-500/15 shadow-sm max-w-[360px] w-full text-center relative overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:border-indigo-500/30 hover:shadow-[0_24px_48px_rgba(99,102,241,0.15),0_0_0_1px_rgba(99,102,241,0.15)]">
-    <!-- Glow Blob -->
-    <div 
-      class="absolute w-[220px] h-[220px] rounded-full blur-[40px] pointer-events-none -top-[80px] -right-[60px]"
-      :class="isAlt ? 'bg-[radial-gradient(circle,rgba(13,148,136,0.12),transparent)]' : 'bg-[radial-gradient(circle,rgba(99,102,241,0.12),transparent)]'"
-    ></div>
-
-    <div class="relative w-[96px] h-[96px] mx-auto mb-[1.4rem]">
+  <article class="hof-dev">
+    <!-- avatar -->
+    <div class="hof-dev-avatar">
       <AppImg
         :src="useImageUrl(dev.foto, dev.nama)"
         :alt="dev.nama"
         rounded="full"
-        class="w-[96px] h-[96px] rounded-full"
-        @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('', dev.nama)"
+        loading="lazy"
+        class="w-full h-full"
       />
-      
-      <!-- Spinning Ring -->
-      <div 
-        class="absolute -inset-[5px] rounded-full border-[2px] animate-[spin_8s_linear_infinite]"
-        :class="isAlt ? 'border-[#0d9488]/40 border-t-[#2dd4bf] border-r-transparent border-l-transparent' : 'border-indigo-500/40 border-t-[#818cf8] border-r-transparent border-l-transparent'"
-      ></div>
-
-      <!-- Badge Icon -->
-      <div 
-        class="absolute -bottom-[4px] -right-[4px] w-[28px] h-[28px] rounded-full flex items-center justify-center border-[2px] border-bg-primary text-white"
-        :class="isAlt ? 'bg-gradient-to-br from-[#0d9488] to-[#0891b2]' : 'bg-gradient-to-br from-[#6366f1] to-[#a855f7]'"
-      >
-        <Icon name="material-symbols:code" size="14" />
-      </div>
-    </div>
-
-    <!-- Role Chip -->
-    <div 
-      class="inline-block border text-[0.68rem] font-[700] tracking-[1.5px] uppercase px-[14px] py-[4px] rounded-[20px] mb-[0.7rem]"
-      :class="isAlt ? 'bg-[#0d9488]/15 text-[#2dd4bf] border-[#0d9488]/25' : 'bg-indigo-500/15 text-[#818cf8] border-indigo-500/25'"
-    >
-      {{ dev.role }}
-    </div>
-
-    <h3 class="text-[1.2rem] font-[700] text-text-main mb-[0.8rem]">{{ dev.nama }}</h3>
-    <p class="text-[0.75rem] text-text-subtle italic mb-1">Periode Dev {{ dev.periode_dev }}</p>
-    <p class="text-[0.86rem] text-text-muted leading-[1.75] mb-[1.2rem]">{{ dev.deskripsi }}</p>
-
-    <div class="flex gap-[0.5rem] flex-wrap justify-center mb-4">
-      <span 
-        v-for="(stack, i) in (dev.tech_stack || [])" 
-        :key="i"
-        class="border text-[0.72rem] font-[600] px-[11px] py-[4px] rounded-[8px] bg-indigo-500/5 border-indigo-500/20 text-text-muted"
-      >
-        {{ stack }}
+      <span class="hof-dev-mark" aria-hidden="true">
+        <Icon name="material-symbols:code" class="hof-dev-mark-icon" />
       </span>
     </div>
-  </div>
+
+    <div class="hof-dev-body">
+      <span class="hof-dev-role">{{ dev.role }}</span>
+      <h3 class="hof-dev-name">{{ dev.nama }}</h3>
+      <p v-if="dev.periode_dev" class="hof-dev-period">Periode Dev {{ dev.periode_dev }}</p>
+      <p v-if="dev.deskripsi" class="hof-dev-desc">{{ dev.deskripsi }}</p>
+
+      <div v-if="(dev.tech_stack || []).length" class="hof-dev-stack">
+        <span v-for="(stack, i) in dev.tech_stack" :key="i" class="hof-dev-chip">{{ stack }}</span>
+      </div>
+    </div>
+  </article>
 </template>
 
 <script setup lang="ts">
 defineProps<{
   dev: any
-  isAlt?: boolean
 }>()
 </script>
+
+<style scoped>
+.hof-dev {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  max-width: 320px;
+  width: 100%;
+}
+
+.hof-dev-avatar {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  border-radius: 9999px;
+}
+
+.hof-dev-mark {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(160deg, #6366f1, #a855f7);
+  border: 2px solid var(--bg-card, #fff);
+}
+.hof-dev-mark-icon { font-size: 15px; }
+
+.hof-dev-role {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent, #6366f1);
+  background: var(--accent-soft, rgba(99, 102, 241, 0.08));
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 9999px;
+  padding: 4px 12px;
+}
+
+.hof-dev-name {
+  margin: 10px 0 0;
+  font-weight: 800;
+  font-size: 1.12rem;
+  color: var(--text-main, #1c1a3e);
+}
+.hof-dev-period {
+  margin: 3px 0 0;
+  font-size: 0.76rem;
+  font-style: italic;
+  color: var(--text-subtle, #a09dbf);
+}
+.hof-dev-desc {
+  margin: 10px 0 0;
+  font-size: 0.84rem;
+  line-height: 1.7;
+  color: var(--text-muted, #6b6882);
+}
+
+.hof-dev-stack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+.hof-dev-chip {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted, #6b6882);
+  background: var(--bg-card-2, #f8f7ff);
+  border: 1px solid var(--border, rgba(99, 102, 241, 0.11));
+  border-radius: var(--radius-sm, 10px);
+  padding: 3px 10px;
+}
+</style>
