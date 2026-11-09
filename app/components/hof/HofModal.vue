@@ -1,118 +1,107 @@
 <template>
-  <div 
-    v-if="isHofModalOpen" 
-    class="fixed inset-0 bg-black/70 backdrop-blur-md z-[2000] flex items-center justify-center p-4 md:p-8"
-    @click.self="closeHofModal"
-  >
-    <div class="bg-bg-card rounded-2xl w-full max-w-[800px] max-h-[90vh] flex flex-col shadow-[0_30px_60px_rgba(0,0,0,0.4)] animate-[slideUp_0.4s_cubic-bezier(0.16,1,0.3,1)]">
-      <div class="flex items-center justify-between p-[1.5rem_2rem] border-b border-border">
-        <h3 class="font-serif text-[1.2rem] md:text-[1.4rem] font-bold m-0 text-text-main">{{ modalTitle }}</h3>
-        <button 
-          class="bg-bg-primary text-text-muted border-none w-10 h-10 rounded-full flex items-center justify-center text-[1.3rem] cursor-pointer transition-all duration-250 hover:bg-accent hover:text-white"
-          @click="closeHofModal"
-        >
-          <Icon name="material-symbols:close" size="24" />
-        </button>
-      </div>
-
-      <div class="p-[1.5rem] md:p-[2rem] overflow-y-auto scrollbar-thin scrollbar-thumb-border flex-1">
-        <!-- MODE: MEMBER_PROFILE -->
-        <div v-if="modalType === 'MEMBER_PROFILE'" class="text-center py-8 px-4">
-          <AppImg
-            :src="useImageUrl(modalData?.foto, modalData?.nama)"
-            :alt="modalData?.nama"
-            rounded="full"
-            class="w-[120px] h-[120px] rounded-full border-[4px] border-[#f59e0b] mx-auto mb-[1.5rem] block"
-          />
-          <p class="text-[#f59e0b] font-[700] text-[0.75rem] mb-[0.5rem] uppercase tracking-[2px]">{{ modalData?.jabatan }}</p>
-          <h3 class="text-text-main text-[1.4rem] font-serif m-0">{{ modalData?.nama }}</h3>
-        </div>
-
-        <!-- MODE: PERIOD_MEMBERS -->
-        <div v-else-if="modalType === 'PERIOD_MEMBERS'" class="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-[1rem] md:gap-[1.5rem] mt-[0.5rem]">
-          <div 
-            v-for="m in (modalData?.members ?? modalData)" 
-            :key="m.id" 
-            class="bg-bg-card p-[1.2rem] rounded-[20px] text-center border border-border shadow-sm relative overflow-hidden"
-          >
-             <div class="relative w-[60px] h-[60px] mx-auto mb-[1rem]">
-                <AppImg
-                  :src="useImageUrl(m.foto, m.nama)"
-                  :alt="m.nama"
-                  rounded="full"
-                  class="w-[60px] h-[60px] rounded-full"
-                />
-                <div class="absolute -inset-[4px] rounded-full border-[2px]"
-                  :style="`border-color: ${modalData?.org === 'MPK' ? '#ec489950' : '#f59e0b50'}`"
-                ></div>
-             </div>
-             <div class="text-[0.62rem] font-[700] tracking-[1.5px] uppercase mb-[0.4rem]"
-               :style="`color: ${modalData?.org === 'MPK' ? '#ec4899' : '#f59e0b'}`"
-             >{{ m.jabatan }}</div>
-             <h3 class="text-[0.82rem] font-[600] text-text-main leading-[1.4] m-0">{{ m.nama }}</h3>
+  <Transition name="hof-modal">
+    <div
+      v-if="isHofModalOpen"
+      class="hof-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      :aria-label="modalTitle"
+      @click.self="closeHofModal"
+    >
+      <div ref="panel" class="hof-modal-panel" tabindex="-1">
+        <header class="hof-modal-head">
+          <div class="hof-modal-head-title">
+            <span class="hof-modal-kicker" aria-hidden="true">
+              <Icon name="material-symbols:auto-awesome" class="hof-modal-kicker-icon" />
+            </span>
+            <h3 class="hof-modal-title">{{ modalTitle }}</h3>
           </div>
-        </div>
+          <button class="hof-modal-close" aria-label="Tutup" @click="closeHofModal">
+            <Icon name="material-symbols:close" class="hof-modal-close-icon" />
+          </button>
+        </header>
 
-        <!-- MODE: OLDER_PERIODS — each item is a generation { angkatan, osis, mpk } -->
-        <div v-else-if="modalType === 'OLDER_PERIODS'" class="flex flex-col gap-[1.2rem] mt-[0.5rem]">
-          <div 
-            v-for="g in modalData" 
-            :key="g.angkatan"
-            class="border border-border rounded-[14px] overflow-hidden"
-          >
-            <!-- Angkatan header -->
-            <div class="px-4 py-2 text-[0.65rem] font-[800] tracking-[2.5px] uppercase"
-              style="background: var(--bg-card-2, rgba(0,0,0,0.04)); color: var(--text-muted)">
-              Angkatan Ke-{{ g.angkatan }}
+        <div class="hof-modal-body">
+          <!-- ── MEMBER PROFILE ───────────────────────────────── -->
+          <div v-if="modalType === 'MEMBER_PROFILE'" class="hof-profile">
+            <div class="hof-profile-avatar">
+              <AppImg
+                :src="useImageUrl(modalData?.foto, modalData?.nama)"
+                :alt="modalData?.nama"
+                rounded="full"
+                loading="lazy"
+                class="w-full h-full"
+              />
+              <span class="hof-profile-ring" />
             </div>
+            <p class="hof-profile-role">{{ modalData?.jabatan }}</p>
+            <h4 class="hof-profile-name">{{ modalData?.nama }}</h4>
+            <p v-if="modalData?.motto" class="hof-profile-motto">“{{ modalData?.motto }}”</p>
+          </div>
 
-            <!-- OSIS row -->
-            <div 
-              v-if="g.osis"
-              class="p-[0.9rem_1.4rem] flex justify-between items-center cursor-pointer transition-colors group hover:bg-indigo-500/5"
-              @click="openPeriodMembersModal(g.osis, 'OSIS', true)"
-              tabindex="0"
-              role="button"
-              @keyup.enter="openPeriodMembersModal(g.osis, 'OSIS', true)"
+          <!-- ── PERIOD MEMBERS ───────────────────────────────── -->
+          <div v-else-if="modalType === 'PERIOD_MEMBERS'" class="hof-members">
+            <div
+              v-for="m in (modalData?.members ?? modalData)"
+              :key="m.id ?? m.nama"
+              class="hof-member"
+              :class="{ 'is-mpk': modalData?.org === 'MPK' }"
             >
-              <div class="flex items-center gap-3 min-w-0">
-                <span class="text-[0.6rem] font-[800] tracking-[1.5px] uppercase px-2 py-0.5 rounded-full bg-indigo-500/10 text-[#818cf8] border border-indigo-500/20 shrink-0">OSIS</span>
-                <div class="min-w-0">
-                  <p class="font-[600] text-text-main text-[0.9rem] truncate m-0">Periode {{ g.osis.nama }}</p>
-                  <p class="text-[0.82rem] text-text-muted m-0">{{ g.osis.tahun }}</p>
-                </div>
-              </div>
-              <Icon name="material-symbols:chevron-right" size="22" class="text-text-muted group-hover:text-[#818cf8] transition-colors shrink-0" />
+              <button class="hof-member-card" @click="openMemberProfileModal(m)">
+                <span class="hof-member-avatar">
+                  <AppImg
+                    :src="useImageUrl(m.foto, m.nama)"
+                    :alt="m.nama"
+                    rounded="full"
+                    loading="lazy"
+                    class="w-full h-full"
+                  />
+                  <span class="hof-member-ring" />
+                </span>
+                <span class="hof-member-role">{{ m.jabatan }}</span>
+                <span class="hof-member-name">{{ m.nama }}</span>
+              </button>
             </div>
+          </div>
 
-            <!-- MPK row -->
-            <div 
-              v-if="g.mpk"
-              class="p-[0.9rem_1.4rem] flex justify-between items-center cursor-pointer transition-colors group hover:bg-pink-500/5 border-t"
-              :class="g.osis ? 'border-border/40' : 'border-transparent'"
-              @click="openPeriodMembersModal(g.mpk, 'MPK', true)"
-              tabindex="0"
-              role="button"
-              @keyup.enter="openPeriodMembersModal(g.mpk, 'MPK', true)"
-            >
-              <div class="flex items-center gap-3 min-w-0">
-                <span class="text-[0.6rem] font-[800] tracking-[1.5px] uppercase px-2 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20 shrink-0">MPK</span>
-                <div class="min-w-0">
-                  <p class="font-[600] text-text-main text-[0.9rem] truncate m-0">Periode {{ g.mpk.nama }}</p>
-                  <p class="text-[0.82rem] text-text-muted m-0">{{ g.mpk.tahun }}</p>
-                </div>
-              </div>
-              <Icon name="material-symbols:chevron-right" size="22" class="text-text-muted group-hover:text-pink-400 transition-colors shrink-0" />
+          <!-- ── OLDER PERIODS ────────────────────────────────── -->
+          <div v-else-if="modalType === 'OLDER_PERIODS'" class="hof-older">
+            <div v-for="g in modalData" :key="g.angkatan" class="hof-older-group">
+              <div class="hof-older-year">Angkatan Ke-{{ g.angkatan }}</div>
+              <button
+                v-if="g.osis"
+                class="hof-older-row"
+                @click="openPeriodMembersModal(g.osis, 'OSIS', true)"
+              >
+                <span class="hof-older-org is-osis">OSIS</span>
+                <span class="hof-older-info">
+                  <span class="hof-older-name">Periode {{ g.osis.nama }}</span>
+                  <span class="hof-older-meta">{{ g.osis.tahun }}</span>
+                </span>
+                <Icon name="material-symbols:chevron-right" class="hof-older-arrow" />
+              </button>
+              <button
+                v-if="g.mpk"
+                class="hof-older-row"
+                @click="openPeriodMembersModal(g.mpk, 'MPK', true)"
+              >
+                <span class="hof-older-org is-mpk">MPK</span>
+                <span class="hof-older-info">
+                  <span class="hof-older-name">Periode {{ g.mpk.nama }}</span>
+                  <span class="hof-older-meta">{{ g.mpk.tahun }}</span>
+                </span>
+                <Icon name="material-symbols:chevron-right" class="hof-older-arrow" />
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useHof } from '~/composables/useHof'
 
 const {
@@ -121,19 +110,313 @@ const {
   modalTitle,
   modalData,
   closeHofModal,
-  openPeriodMembersModal
+  openPeriodMembersModal,
+  openMemberProfileModal,
 } = useHof()
+
+const panel = ref<HTMLElement | null>(null)
 
 watch(isHofModalOpen, (val) => {
   if (import.meta.client) {
     document.body.style.overflow = val ? 'hidden' : ''
   }
 })
+
+const onKeydown = (e: KeyboardEvent) => {
+  if (e.key === 'Escape' && isHofModalOpen.value) closeHofModal()
+}
+
+onMounted(() => {
+  if (import.meta.client) window.addEventListener('keydown', onKeydown)
+})
+onUnmounted(() => {
+  if (import.meta.client) {
+    window.removeEventListener('keydown', onKeydown)
+    document.body.style.overflow = ''
+  }
+})
+
+// Move focus into the dialog when it opens.
+watch(isHofModalOpen, (val) => {
+  if (val && import.meta.client) {
+    panel.value?.focus()
+  }
+})
 </script>
 
 <style scoped>
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+.hof-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 9, 26, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
 }
+
+.hof-modal-panel {
+  width: 100%;
+  max-width: 820px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border, rgba(99, 102, 241, 0.11));
+  border-radius: var(--radius-lg, 24px);
+  box-shadow: var(--shadow-lg, 0 16px 48px rgba(99, 102, 241, 0.18));
+  overflow: hidden;
+  outline: none;
+}
+
+.hof-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border, rgba(99, 102, 241, 0.11));
+}
+.hof-modal-head-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.hof-modal-kicker {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm, 10px);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(160deg, #6366f1, #a855f7);
+}
+.hof-modal-kicker-icon { font-size: 17px; }
+.hof-modal-title {
+  margin: 0;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  color: var(--text-main, #1c1a3e);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hof-modal-close {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted, #6b6882);
+  background: var(--bg-card-2, #f8f7ff);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.hof-modal-close:hover,
+.hof-modal-close:focus-visible {
+  background: var(--accent, #6366f1);
+  color: #fff;
+  outline: none;
+}
+.hof-modal-close-icon { font-size: 20px; }
+
+.hof-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+}
+.hof-modal-body::-webkit-scrollbar { width: 8px; }
+.hof-modal-body::-webkit-scrollbar-thumb { background: var(--border, rgba(99, 102, 241, 0.2)); border-radius: 9999px; }
+
+/* ── Profile ─────────────────────────────────────────────── */
+.hof-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 12px 8px;
+}
+.hof-profile-avatar {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 18px;
+}
+.hof-profile-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 9999px;
+  border: 2px solid rgba(99, 102, 241, 0.55);
+  box-shadow: 0 0 26px rgba(99, 102, 241, 0.4);
+  pointer-events: none;
+}
+.hof-profile-role {
+  margin: 0 0 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent, #6366f1);
+}
+.hof-profile-name {
+  margin: 0;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--text-main, #1c1a3e);
+}
+.hof-profile-motto {
+  margin: 14px 0 0;
+  max-width: 460px;
+  font-size: 0.94rem;
+  font-style: italic;
+  line-height: 1.75;
+  color: var(--text-muted, #6b6882);
+}
+
+/* ── Members grid ────────────────────────────────────────── */
+.hof-members {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+.hof-member-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 7px;
+  padding: 18px 10px;
+  background: var(--bg-card-2, #f8f7ff);
+  border: 1px solid var(--border, rgba(99, 102, 241, 0.11));
+  border-radius: 16px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+.hof-member-card:hover {
+  background: var(--accent-soft, rgba(99, 102, 241, 0.08));
+  border-color: rgba(99, 102, 241, 0.35);
+  transform: translateY(-2px);
+}
+.hof-member-card:focus-visible {
+  outline: 2px solid var(--accent, #6366f1);
+  outline-offset: 2px;
+}
+.hof-member-avatar {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+.hof-member-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(99, 102, 241, 0.4);
+  pointer-events: none;
+}
+.hof-member.is-mpk .hof-member-ring { border-color: rgba(168, 85, 247, 0.45); }
+.hof-member-role {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent, #6366f1);
+}
+.hof-member.is-mpk .hof-member-role { color: #a855f7; }
+.hof-member-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main, #1c1a3e);
+}
+
+/* ── Older periods ───────────────────────────────────────── */
+.hof-older {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.hof-older-group {
+  border: 1px solid var(--border, rgba(99, 102, 241, 0.11));
+  border-radius: var(--radius, 16px);
+  overflow: hidden;
+}
+.hof-older-year {
+  padding: 8px 14px;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted, #6b6882);
+  background: var(--bg-card-2, #f8f7ff);
+}
+.hof-older-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--border, rgba(99, 102, 241, 0.08));
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+.hof-older-row:first-of-type { border-top: none; }
+.hof-older-row:hover,
+.hof-older-row:focus-visible {
+  background: var(--accent-soft, rgba(99, 102, 241, 0.07));
+  outline: none;
+}
+.hof-older-org {
+  flex: none;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  border-radius: 9999px;
+  padding: 3px 9px;
+}
+.hof-older-org.is-osis { background: #6366f1; }
+.hof-older-org.is-mpk { background: #a855f7; }
+.hof-older-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.hof-older-name {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-main, #1c1a3e);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hof-older-meta {
+  font-size: 0.74rem;
+  color: var(--text-muted, #6b6882);
+}
+.hof-older-arrow {
+  font-size: 1.2rem;
+  color: var(--text-subtle, #a09dbf);
+}
+
+/* ── Transition ──────────────────────────────────────────── */
+.hof-modal-enter-active,
+.hof-modal-leave-active { transition: opacity 0.24s ease; }
+.hof-modal-enter-active .hof-modal-panel,
+.hof-modal-leave-active .hof-modal-panel { transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1); }
+.hof-modal-enter-from,
+.hof-modal-leave-to { opacity: 0; }
+.hof-modal-enter-from .hof-modal-panel { transform: translateY(18px) scale(0.98); }
+.hof-modal-leave-to .hof-modal-panel { transform: translateY(18px) scale(0.98); }
 </style>
