@@ -10,7 +10,6 @@
           {{ statusLabel }}
         </span>
       </div>
-      <!-- Link count badge -->
       <span v-if="links.length" class="inline-flex items-center gap-1 text-[0.62rem] font-bold px-1.5 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shrink-0">
         <Icon name="material-symbols:link-rounded" class="text-[0.75rem]" />
         {{ links.length }}
@@ -32,11 +31,9 @@
       {{ prog.target }}
     </div>
 
-    <!-- ── Link buttons ───────────────────────────────────────────── -->
     <div v-if="links.length" class="mt-1 pt-2 border-t border-border space-y-1.5">
       <template v-for="link in links" :key="link.id ?? link.ref_id + link.link_type">
 
-        <!-- Dokumentasi → navigate to article -->
         <NuxtLink
           v-if="link.link_type === 'DOKUMENTASI'"
           :to="`/dokumentasi/${articleSlug({ id: link.ref_id, title: link.title || '' })}`"
@@ -49,12 +46,13 @@
           <Icon name="material-symbols:arrow-outward-rounded" class="text-[0.75rem] text-indigo-400 opacity-60 group-hover:opacity-100 shrink-0 transition-opacity" />
         </NuxtLink>
 
-        <!-- Agenda → expand inline popover -->
         <div v-else-if="link.link_type === 'AGENDA'" class="rounded-xl border overflow-hidden transition-all duration-200"
-          :class="openAgenda === link.ref_id ? 'border-amber-500/30 bg-amber-500/5' : 'border-transparent bg-amber-500/5 hover:border-amber-500/20'">
+          :class="openAgenda === link.ref_id ? 'border-amber-500/30 bg-amber-500/5' : 'border-transparent bg-amber-500/5 hover:border-amber-500/20'"
+        >
           <button type="button"
             class="flex items-center gap-2 w-full text-left px-2.5 py-2 transition-colors group"
-            @click="openAgenda = (openAgenda === link.ref_id ? null : link.ref_id)">
+            @click="openAgenda = (openAgenda === link.ref_id ? null : link.ref_id)"
+          >
             <div class="w-6 h-6 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0 group-hover:bg-amber-500/25 transition-colors">
               <Icon name="material-symbols:event-rounded" class="text-amber-400 text-[0.85rem]" />
             </div>
@@ -66,7 +64,6 @@
             />
           </button>
 
-          <!-- Expanded agenda mini-card -->
           <Transition
             enter-active-class="transition-all duration-200 ease-out"
             enter-from-class="opacity-0 -translate-y-1"
@@ -75,19 +72,16 @@
           >
             <div v-if="openAgenda === link.ref_id" class="px-2.5 pb-2.5">
               <div class="rounded-xl bg-amber-500/8 border border-amber-500/15 p-3 space-y-1.5">
-                <!-- Date range -->
                 <div v-if="link.start_date || link.end_date" class="flex items-center gap-1.5 text-[0.7rem] font-semibold text-amber-600 dark:text-amber-300">
                   <Icon name="material-symbols:schedule-rounded" class="text-[0.85rem] shrink-0 opacity-70" />
                   <span>{{ formatDateRange(link.start_date, link.end_date) }}</span>
                 </div>
-                <!-- Description -->
                 <p v-if="link.ket" class="text-[0.7rem] text-text-muted leading-relaxed m-0 line-clamp-3">{{ link.ket }}</p>
                 <p v-else class="text-[0.68rem] text-text-subtle italic m-0">Tidak ada deskripsi agenda.</p>
               </div>
             </div>
           </Transition>
         </div>
-
       </template>
     </div>
   </article>
@@ -102,33 +96,28 @@ const props = defineProps<{
   prog: any
 }>()
 
-// Which agenda card is expanded (by ref_id)
 const openAgenda = ref<number | null>(null)
 
-// Normalised links array (guard against undefined)
 const links = computed<ProgramLink[]>(() => Array.isArray(props.prog.links) ? props.prog.links : [])
 
-// ── Scope badge ───────────────────────────────────────────────────
 const SCOPE_COLORS: Record<string, any> = {
-  'BPH':    { bg: 'rgba(99,102,241,0.10)', text: '#6366f1', border: 'rgba(99,102,241,0.2)' },
+  'BPH': { bg: 'rgba(99,102,241,0.10)', text: '#6366f1', border: 'rgba(99,102,241,0.2)' },
   'SEKBID': { bg: 'rgba(168,85,247,0.10)', text: '#a855f7', border: 'rgba(168,85,247,0.2)' },
 }
 const scopeData = computed(() => SCOPE_COLORS[props.prog.scope] || SCOPE_COLORS['BPH'])
 const scopeStyle = computed(() => `background:${scopeData.value.bg};color:${scopeData.value.text};border:1px solid ${scopeData.value.border}`)
 
-// ── Status badge ─────────────────────────────────────────────────
 const STATUS_CONFIG: Record<string, any> = {
-  'Berjalan':     { dot: 'bg-[#f59e0b]', badge: 'bg-orange-100 text-[#d97706] dark:bg-orange-500/10 dark:text-[#fbbf24]' },
-  'Selesai':      { dot: 'bg-[#22c55e]', badge: 'bg-green-100 text-[#16a34a] dark:bg-green-500/10 dark:text-[#4ade80]' },
-  'Dibatalkan':   { dot: 'bg-red-400',   badge: 'bg-red-100 text-red-600 dark:bg-red-500/10 dark:text-red-400' },
+  'Berjalan': { dot: 'bg-[#f59e0b]', badge: 'bg-orange-100 text-[#d97706] dark:bg-orange-500/10 dark:text-[#fbbf24]' },
+  'Selesai': { dot: 'bg-[#22c55e]', badge: 'bg-green-100 text-[#16a34a] dark:bg-green-500/10 dark:text-[#4ade80]' },
+  'Dibatalkan': { dot: 'bg-red-400', badge: 'bg-red-100 text-red-600 dark:bg-red-500/10 dark:text-red-400' },
   'Direncanakan': { dot: 'bg-[#94a3b8]', badge: 'bg-slate-200 text-[#64748b] dark:bg-slate-500/10 dark:text-[#94a3b8]' },
 }
 const statusCfg = computed(() => STATUS_CONFIG[props.prog.status || 'Direncanakan'] || STATUS_CONFIG['Direncanakan'])
-const statusDotClass  = computed(() => statusCfg.value.dot)
+const statusDotClass = computed(() => statusCfg.value.dot)
 const statusBadgeClass = computed(() => statusCfg.value.badge)
 const statusLabel = computed(() => props.prog.status || 'Direncanakan')
 
-// ── Date range formatter ─────────────────────────────────────────
 function formatDateRange(start?: string | null, end?: string | null): string {
   const fmt = (d?: string | null) => {
     if (!d) return ''

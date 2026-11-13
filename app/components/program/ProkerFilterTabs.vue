@@ -28,6 +28,13 @@
     >
       <span class="inline-block w-[7px] h-[7px] rounded-full bg-[#94a3b8] shrink-0"></span>Direncanakan
     </button>
+    <button 
+      class="inline-flex items-center gap-1.5 px-3.5 md:px-4 py-2 rounded-[10px] border border-border bg-bg-card text-text-muted font-semibold text-[0.8rem] md:text-[0.85rem] cursor-pointer transition-all duration-200 whitespace-nowrap shrink-0"
+      :class="modelValue === 'Dibatalkan' ? '!text-accent !border-accent !bg-accent-soft' : 'hover:text-accent hover:border-accent hover:bg-accent-soft'" 
+      @click="$emit('update:modelValue', 'Dibatalkan')"
+    >
+      <span class="inline-block w-[7px] h-[7px] rounded-full bg-[#f87171] shrink-0"></span>Dibatalkan
+    </button>
   </div>
 </template>
 
