@@ -18,6 +18,10 @@ logs
 .fleet
 .idea
 
+# QA artifacts & graphify outputs
+.qa/
+graphify-out/
+
 # Local env files
 .env
 .env.*
