@@ -4,14 +4,11 @@ import { ref } from 'vue'
 const loading       = ref(true)
 const dokumentasi   = ref<any[]>([])
 
-const selectedEvent        = ref<any>(null)
-const isArticleModalOpen   = ref(false)
-
 const selectedPhotos       = ref<any[]>([])
 const selectedPhotoIndex   = ref(0)
+const lightboxTitle        = ref('')
 const isLightboxModalOpen  = ref(false)
 
-let _articleCloseTimer: ReturnType<typeof setTimeout> | null = null
 let _loaded = false
 
 // ─── Composable (auto-imported by Nuxt) ──────────────────────────────────────
@@ -34,31 +31,11 @@ export function useDokumentasi() {
     }
   }
 
-  // ── Article modal ───────────────────────────────────
-  const openArticleModal = (event: any) => {
-    // Cancel any pending clear from a previous close
-    if (_articleCloseTimer) {
-      clearTimeout(_articleCloseTimer)
-      _articleCloseTimer = null
-    }
-    selectedEvent.value       = event
-    isArticleModalOpen.value  = true
-    if (import.meta.client) document.body.style.overflow = 'hidden'
-  }
-
-  const closeArticleModal = () => {
-    isArticleModalOpen.value = false
-    if (import.meta.client) document.body.style.overflow = ''
-    _articleCloseTimer = setTimeout(() => {
-      selectedEvent.value  = null
-      _articleCloseTimer   = null
-    }, 400)
-  }
-
   // ── Lightbox modal ──────────────────────────────────
-  const openLightboxModal = (photos: any[], startIndex = 0) => {
+  const openLightboxModal = (photos: any[], startIndex = 0, title = '') => {
     selectedPhotos.value      = photos
     selectedPhotoIndex.value  = startIndex
+    lightboxTitle.value       = title
     isLightboxModalOpen.value = true
   }
 
@@ -71,13 +48,9 @@ export function useDokumentasi() {
     dokumentasi,
     loadDokumentasiData,
 
-    selectedEvent,
-    isArticleModalOpen,
-    openArticleModal,
-    closeArticleModal,
-
     selectedPhotos,
     selectedPhotoIndex,
+    lightboxTitle,
     isLightboxModalOpen,
     openLightboxModal,
     closeLightboxModal,
