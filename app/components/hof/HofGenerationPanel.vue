@@ -22,7 +22,7 @@
 
     <!-- ── Constellation ──────────────────────────────────────── -->
     <div class="hof-panel-map">
-      <ConstellationMap
+      <HofConstellationMap
         :stars="stars"
         :size="'md'"
         :variant="isLatest ? 'bright' : 'faint'"

@@ -24,7 +24,7 @@
       <!-- Latest demisioner cabinet = the brightest constellation in the sky -->
       <div class="hof-hero-map" :class="{ 'is-empty': !hasStars }">
         <template v-if="hasStars">
-          <ConstellationMap
+          <HofConstellationMap
             :stars="latestStars"
             :variant="'bright'"
             :size="'lg'"
