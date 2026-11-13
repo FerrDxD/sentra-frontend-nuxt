@@ -1,152 +1,108 @@
 <template>
-  <main class="article-page max-w-[860px] mx-auto px-4 md:px-6 pt-24 md:pt-28 pb-16 md:pb-20">
+  <main class="art-page">
     <!-- Back link -->
-    <NuxtLink
-      to="/dokumentasi"
-      class="inline-flex items-center gap-1.5 text-[0.85rem] font-semibold text-text-muted no-underline mb-6 hover:text-accent transition-colors"
-    >
-      <Icon name="material-symbols:arrow-back-rounded" class="text-base" />
+    <NuxtLink to="/dokumentasi" class="art-back">
+      <Icon name="material-symbols:arrow-back-rounded" aria-hidden="true" />
       Kembali ke Dokumentasi
     </NuxtLink>
 
     <!-- Loading skeleton (mirrors article layout) -->
-    <div v-if="pending" class="bg-bg-card rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] border border-border overflow-hidden">
-      <!-- Hero skeleton -->
-      <div class="relative h-[260px] md:h-[420px] skeleton-shimmer">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 space-y-3">
-          <div class="h-5 w-20 rounded-full bg-white/20 animate-pulse" />
-          <div class="h-8 md:h-10 w-4/5 rounded-lg bg-white/15 animate-pulse" />
-          <div class="h-4 w-32 rounded bg-white/10 animate-pulse" />
+    <div v-if="pending" class="art-card art-skel" role="status" aria-live="polite">
+      <span class="sr-only">Memuat artikel…</span>
+      <div class="art-hero art-skel__hero" aria-hidden="true">
+        <div class="art-skel__lines">
+          <span class="art-skel__pill" />
+          <span class="art-skel__title" />
+          <span class="art-skel__meta" />
         </div>
       </div>
-      <!-- Body skeleton -->
-      <div class="p-6 md:p-10 pb-8 md:pb-12 space-y-4">
-        <div class="h-7 w-3/5 rounded-lg bg-bg-card-2 animate-pulse" />
-        <div class="space-y-2.5 pt-2">
-          <div class="h-4 w-full rounded bg-bg-card-2 animate-pulse" />
-          <div class="h-4 w-full rounded bg-bg-card-2 animate-pulse" />
-          <div class="h-4 w-5/6 rounded bg-bg-card-2 animate-pulse" />
-          <div class="h-4 w-full rounded bg-bg-card-2 animate-pulse" />
-          <div class="h-4 w-2/3 rounded bg-bg-card-2 animate-pulse" />
-        </div>
-        <div class="pt-6 space-y-2.5">
-          <div class="h-4 w-full rounded bg-bg-card-2 animate-pulse" />
-          <div class="h-4 w-4/5 rounded bg-bg-card-2 animate-pulse" />
-          <div class="h-4 w-full rounded bg-bg-card-2 animate-pulse" />
-        </div>
-        <!-- Gallery skeleton -->
-        <div class="pt-8">
-          <div class="flex items-center gap-4 mb-6">
-            <div class="flex-1 h-px bg-border" />
-            <div class="h-3 w-24 rounded bg-bg-card-2 animate-pulse" />
-            <div class="flex-1 h-px bg-border" />
-          </div>
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <div v-for="i in 4" :key="i" class="aspect-square rounded-xl skeleton-shimmer border border-border" :class="{ 'hidden md:block': i > 3 }" />
-          </div>
+      <div class="art-body" aria-hidden="true">
+        <span class="art-skel__h" />
+        <span class="art-skel__p" />
+        <span class="art-skel__p" />
+        <span class="art-skel__p art-skel__p--short" />
+        <div class="art-grid art-skel__grid">
+          <span v-for="i in 4" :key="i" class="art-skel__tile" />
         </div>
       </div>
     </div>
 
     <!-- Not found -->
-    <div v-else-if="!article" class="text-center py-20">
-      <Icon name="material-symbols:article-off-rounded" class="text-[48px] opacity-40 mb-3" />
-      <h1 class="text-[1.4rem] font-bold mb-2">Artikel tidak ditemukan</h1>
-      <p class="text-text-muted text-[0.9rem] mb-6">Artikel yang kamu cari mungkin sudah dihapus atau dipindahkan.</p>
-      <NuxtLink
-        to="/dokumentasi"
-        class="inline-flex items-center gap-1.5 bg-accent text-white px-5 py-2 rounded-full no-underline font-semibold text-[0.88rem] hover:bg-accent-hover transition-colors"
-      >
-        Lihat Dokumentasi
-      </NuxtLink>
+    <div v-else-if="!article" class="art-empty">
+      <span class="art-empty__icon" aria-hidden="true">
+        <Icon name="material-symbols:article-off-rounded" />
+      </span>
+      <h1 class="art-empty__title">Artikel tidak ditemukan</h1>
+      <p class="art-empty__text">Artikel yang kamu cari mungkin sudah dihapus atau dipindahkan.</p>
+      <NuxtLink to="/dokumentasi" class="art-empty__cta">Lihat Dokumentasi</NuxtLink>
     </div>
 
     <!-- Article -->
-    <article
-      v-else
-      class="bg-bg-card rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] border border-border overflow-hidden"
-    >
+    <article v-else class="art-card">
       <!-- Hero -->
-      <header class="relative h-[260px] md:h-[420px] overflow-hidden">
+      <header class="art-hero">
         <AppImg
           :src="useImageUrl(article.thumbnail)"
           :alt="article.title"
           loading="eager"
-          class="w-full h-full"
+          class="art-hero__img"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 text-white">
-          <span class="inline-block bg-accent text-white font-sans text-[0.68rem] font-bold tracking-[0.1em] uppercase px-3.5 py-1.5 rounded-full mb-3">
-            {{ article.tag_text || 'Kegiatan' }}
-          </span>
-          <h1 class="font-serif text-[1.5rem] md:text-[2.2rem] font-[900] leading-[1.15] mb-2 text-white">
-            {{ article.title }}
-          </h1>
-          <div class="font-sans text-[0.85rem] opacity-80 text-white">
-            {{ formatRangeIndo(article.start_date, article.end_date) }}
-          </div>
+        <span class="art-hero__scrim" aria-hidden="true" />
+        <div class="art-hero__body">
+          <span class="art-hero__tag">{{ article.tag_text || 'Kegiatan' }}</span>
+          <h1 class="art-hero__title">{{ article.title }}</h1>
+          <p class="art-hero__date">
+            <time :datetime="article.start_date || ''">
+              {{ formatRangeIndo(article.start_date, article.end_date) }}
+            </time>
+          </p>
         </div>
       </header>
 
       <!-- Body -->
-      <div class="p-6 md:p-10 pb-8 md:pb-12 text-text-main">
-        <h2 v-if="article.narasi_title" class="font-serif text-[1.4rem] md:text-[1.6rem] font-bold leading-[1.3] mb-5">
-          {{ article.narasi_title }}
-        </h2>
+      <div class="art-body">
+        <h2 v-if="article.narasi_title" class="art-subhead">{{ article.narasi_title }}</h2>
 
-        <div class="font-sans text-[0.95rem] leading-[1.9] mb-10 html-content" v-html="renderedNarasi" />
+        <div class="art-prose" v-html="renderedNarasi" />
 
-        <p
-          v-if="article.narasi_footer"
-          class="font-sans text-[0.82rem] text-text-muted italic mt-6 pt-4 border-t border-border"
-        >
-          {{ article.narasi_footer }}
-        </p>
+        <p v-if="article.narasi_footer" class="art-credit">{{ article.narasi_footer }}</p>
 
         <!-- Photo gallery -->
         <template v-if="hasPhotos">
-          <div class="flex items-center gap-4 my-10">
-            <div class="flex-1 h-px bg-border" />
-            <span class="font-sans text-[0.72rem] font-semibold tracking-[0.12em] uppercase text-accent whitespace-nowrap">
-              Galeri Kegiatan
-            </span>
-            <div class="flex-1 h-px bg-border" />
+          <div class="art-gallery__head">
+            <h2 class="art-gallery__title">Galeri kegiatan</h2>
+            <span class="art-gallery__count">{{ photos.length }} foto</span>
           </div>
 
-          <div class="grid gap-3 mb-8" :class="gridClass">
+          <div class="art-grid" :class="gridClass">
             <button
               v-for="(img, i) in previewPhotos"
               :key="i"
               type="button"
-              class="relative rounded-xl overflow-hidden cursor-pointer bg-black/5 aspect-square group focus:outline-none focus:ring-2 focus:ring-accent border-0 p-0"
-              :class="{ 'md:col-span-2 md:row-span-2': isHeroPhoto(Number(i), previewPhotos.length) }"
-              @click="openLightboxModal(photos, Number(i))"
+              class="art-shot group"
+              :class="{ 'art-shot--lead': isHeroPhoto(Number(i), previewPhotos.length) }"
+              :aria-label="`Buka foto ${Number(i) + 1} dari ${previewPhotos.length}${img.caption ? `: ${img.caption}` : ''}`"
+              @click="openLightboxModal(photos, Number(i), article.title)"
             >
               <AppImg
                 :src="useImageUrl(img.url)"
                 :alt="img.caption || article.title"
-                img-class="transition-transform duration-500 brightness-90 group-hover:scale-105 group-hover:brightness-100"
-                class="absolute inset-0 w-full h-full"
+                img-class="transition-transform duration-500 ease-out brightness-95 group-hover:scale-105 group-hover:brightness-100"
+                class="absolute inset-0 h-full w-full"
               />
-              <div
-                v-if="img.caption"
-                class="absolute inset-0 bg-transparent flex items-end p-3 transition-colors duration-300 group-hover:bg-black/45 z-10"
-              >
-                <span class="font-sans text-[0.75rem] text-white leading-[1.4] translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                  {{ img.caption }}
-                </span>
-              </div>
+              <span v-if="img.caption" class="art-shot__caption">
+                {{ img.caption }}
+              </span>
             </button>
           </div>
 
           <button
             v-if="photos.length > previewPhotos.length"
             type="button"
-            class="flex items-center justify-center gap-2 w-full p-3.5 border-2 border-dashed border-indigo-500/40 rounded-xl bg-transparent text-accent font-sans text-[0.85rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-indigo-500/10 hover:border-solid"
-            @click="openLightboxModal(photos, previewPhotos.length)"
+            class="art-more"
+            @click="openLightboxModal(photos, previewPhotos.length, article.title)"
           >
-            <Icon name="material-symbols:photo-library" size="18" />
+            <Icon name="material-symbols:photo-library-rounded" aria-hidden="true" />
             Lihat semua {{ photos.length }} foto
           </button>
         </template>
@@ -160,6 +116,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { parseArticleSlug, articleSlug } from '~/utils/articleSlug'
+import { formatRangeIndo } from '~/utils/formatDate'
 
 const route  = useRoute()
 const cfg    = useRuntimeConfig()
@@ -246,25 +203,6 @@ const renderedNarasi = computed(() => {
   if (html && String(html).trim()) return html
   return article.value.description ? `<p>${article.value.description}</p>` : ''
 })
-
-// ── Date formatting ─────────────────────────────────────────────────────────
-const formatRangeIndo = (sStr?: string, eStr?: string) => {
-  const formatDateIndo = (dStr?: string) => {
-    if (!dStr) return ''
-    if (!dStr.match(/^\d{4}-\d{2}-\d{2}$/)) return dStr
-    try {
-      const d = new Date(dStr)
-      if (isNaN(d.getTime())) return dStr
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
-      return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
-    } catch { return dStr }
-  }
-  const start = formatDateIndo(sStr)
-  const end   = formatDateIndo(eStr)
-  if (!start) return ''
-  if (!end || start === end) return start
-  return `${start} - ${end}`
-}
 
 // ── Auto SEO from article data ──────────────────────────────────────────────
 /** Extract a clean, ~155-char description from HTML/plain text. */
@@ -360,42 +298,447 @@ definePageMeta({
 </script>
 
 <style>
-@keyframes skeletonShimmer {
-  0% { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
+/* ── Page frame ──────────────────────────────────────── */
+.art-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 6rem 1rem 4rem;
 }
-.skeleton-shimmer {
-  background: linear-gradient(to right, var(--bg-card) 0%, var(--bg-card-2) 50%, var(--bg-card) 100%);
-  background-size: 800px 100%;
-  animation: skeletonShimmer 1.5s infinite linear;
+@media (min-width: 768px) {
+  .art-page {
+    padding: 7rem 1.5rem 5rem;
+  }
 }
-.article-page .html-content p { margin-bottom: 1rem; }
-.article-page .html-content p:last-child { margin-bottom: 0; }
-.article-page .html-content img { max-width: 100%; border-radius: 12px; margin: 1.25rem 0; display: block; }
-.article-page .html-content h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin: 1.5rem 0 0.75rem;
+
+.art-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+.art-back:hover {
+  color: var(--accent);
+}
+.art-back:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Card shell ──────────────────────────────────────── */
+.art-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--bg-card);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── Hero ────────────────────────────────────────────── */
+.art-hero {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  background: var(--bg-card-2);
+}
+@media (min-width: 768px) {
+  .art-hero {
+    height: 420px;
+  }
+}
+.art-hero__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.art-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(6, 11, 20, 0.94) 0%,
+    rgba(6, 11, 20, 0.66) 32%,
+    rgba(6, 11, 20, 0.12) 72%,
+    rgba(6, 11, 20, 0.04) 100%
+  );
+}
+.art-hero__body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1.5rem;
+}
+@media (min-width: 768px) {
+  .art-hero__body {
+    padding: 2.5rem;
+  }
+}
+.art-hero__tag {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.art-hero__title {
+  margin: 0;
+  max-width: 30ch;
+  font-size: clamp(1.5rem, 4.5vw, 2.5rem);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-wrap: balance;
+}
+.art-hero__date {
+  margin: 0.75rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.86);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Body ────────────────────────────────────────────── */
+.art-body {
+  padding: 1.75rem 1.5rem 2rem;
+}
+@media (min-width: 768px) {
+  .art-body {
+    padding: 2.5rem 2.5rem 2.75rem;
+  }
+}
+.art-subhead {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.25rem, 3vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+  color: var(--text-main);
+  text-wrap: balance;
+}
+
+/* ── Narasi ──────────────────────────────────────────── */
+.art-prose {
+  max-width: 68ch;
+  font-size: 1.0625rem;
+  line-height: 1.75;
   color: var(--text-main);
 }
-.article-page .html-content h3 {
-  font-family: 'Playfair Display', serif;
+.art-prose p {
+  margin: 0 0 1.1em;
+}
+.art-prose p:last-child {
+  margin-bottom: 0;
+}
+.art-prose h2 {
+  margin: 2rem 0 0.75rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+}
+.art-prose h3 {
+  margin: 1.5rem 0 0.5rem;
   font-size: 1.1rem;
   font-weight: 700;
-  margin: 1.25rem 0 0.5rem;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
   color: var(--text-main);
 }
-.article-page .html-content blockquote {
-  border-left: 3px solid var(--accent);
-  padding: 0.5rem 0 0.5rem 1.2rem;
-  margin: 1.25rem 0;
+.art-prose a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+.art-prose img {
+  display: block;
+  max-width: 100%;
+  margin: 1.5rem 0;
+  border-radius: 16px;
+}
+.art-prose blockquote {
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.1rem;
+  border-left: 2px solid var(--accent);
   font-style: italic;
   color: var(--text-muted);
 }
-.article-page .html-content ul,
-.article-page .html-content ol { padding-left: 1.5rem; margin-bottom: 1rem; }
-.article-page .html-content li { margin-bottom: 0.25rem; }
-.article-page .html-content strong { font-weight: 600; }
-.article-page .html-content em { font-style: italic; }
+.art-prose ul,
+.art-prose ol {
+  margin: 0 0 1.1em;
+  padding-left: 1.4rem;
+}
+.art-prose li {
+  margin-bottom: 0.35em;
+}
+.art-prose li::marker {
+  color: var(--accent);
+}
+.art-prose strong {
+  font-weight: 700;
+}
+.art-prose hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.art-credit {
+  max-width: 68ch;
+  margin: 1.75rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+/* ── Gallery ─────────────────────────────────────────── */
+.art-gallery__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 2.5rem 0 1.25rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.art-gallery__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+}
+.art-gallery__count {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.art-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.art-shot {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: var(--bg-card-2);
+  cursor: pointer;
+}
+.art-shot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.art-shot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 11, 20, 0);
+  transition: background-color 0.3s ease;
+  pointer-events: none;
+}
+.art-shot:hover::after {
+  background: rgba(6, 11, 20, 0.22);
+}
+.art-shot--lead {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+@media (max-width: 767px) {
+  .art-shot--lead {
+    grid-column: span 2;
+    grid-row: span 1;
+    aspect-ratio: 16 / 10;
+  }
+}
+.art-shot__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 2rem 0.75rem 0.7rem;
+  background: linear-gradient(to top, rgba(6, 11, 20, 0.86), rgba(6, 11, 20, 0));
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  text-align: left;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.art-shot:hover .art-shot__caption,
+.art-shot:focus-visible .art-shot__caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.art-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg-card-2);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.art-more:hover {
+  background: var(--accent-soft);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: var(--accent);
+}
+.art-more:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Not found ───────────────────────────────────────── */
+.art-empty {
+  padding: 4rem 1rem;
+  text-align: center;
+}
+.art-empty__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 1.6rem;
+}
+.art-empty__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-main);
+}
+.art-empty__text {
+  margin: 0 auto 1.75rem;
+  max-width: 28rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+.art-empty__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.4rem;
+  border-radius: 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.18s ease;
+}
+.art-empty__cta:hover {
+  background: var(--accent-hover);
+}
+.art-empty__cta:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ── Skeleton ────────────────────────────────────────── */
+.art-skel__hero {
+  display: flex;
+  align-items: flex-end;
+  background: linear-gradient(to right, var(--bg-card-2) 0%, var(--bg-card) 50%, var(--bg-card-2) 100%);
+  background-size: 800px 100%;
+  animation: artShimmer 1.5s infinite linear;
+}
+.art-skel__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 1.5rem;
+}
+@media (min-width: 768px) {
+  .art-skel__lines {
+    padding: 2.5rem;
+  }
+}
+.art-skel__pill,
+.art-skel__title,
+.art-skel__meta,
+.art-skel__h,
+.art-skel__p,
+.art-skel__tile {
+  display: block;
+  border-radius: 8px;
+  background: rgba(99, 102, 241, 0.14);
+  animation: artPulse 1.6s ease-in-out infinite;
+}
+.art-skel__pill { width: 5rem; height: 1.35rem; border-radius: 10px; }
+.art-skel__title { width: min(80%, 26rem); height: 2.25rem; }
+.art-skel__meta { width: 12rem; height: 0.9rem; }
+.art-skel__h { width: 60%; height: 1.6rem; margin-bottom: 1.25rem; }
+.art-skel__p { width: 100%; height: 0.85rem; margin-bottom: 0.7rem; }
+.art-skel__p--short { width: 65%; }
+.art-skel__grid { margin-top: 2rem; }
+.art-skel__tile {
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+}
+@keyframes artShimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+@keyframes artPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art-skel__hero,
+  .art-skel__pill,
+  .art-skel__title,
+  .art-skel__meta,
+  .art-skel__h,
+  .art-skel__p,
+  .art-skel__tile {
+    animation: none;
+  }
+  .art-shot__caption {
+    transition: none;
+  }
+}
 </style>
