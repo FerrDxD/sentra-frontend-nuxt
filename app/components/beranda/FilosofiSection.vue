@@ -18,6 +18,7 @@
       <Icon
         name="material-symbols:format-quote-rounded"
         class="absolute top-4 right-4 text-5xl text-accent/10 group-hover:text-accent/20 transition-colors duration-500"
+        aria-hidden="true"
       />
 
       <p class="leading-relaxed text-[0.97rem] md:text-[1rem] text-text-main relative z-10">
@@ -36,7 +37,7 @@
           class="inline-flex items-center gap-1.5 text-[0.72rem] font-semibold px-2.5 py-1 rounded-full border"
           :class="chip.class"
         >
-          <Icon :name="chip.icon" class="text-sm" />
+          <Icon :name="chip.icon" class="text-sm" aria-hidden="true" />
           <span class="font-bold">{{ chip.word }}</span>
           <span class="opacity-70">·</span>
           <span>{{ chip.meaning }}</span>

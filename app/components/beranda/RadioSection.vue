@@ -27,6 +27,7 @@
                 name="material-symbols:radio"
                 class="text-white text-xl"
                 :class="{ 'animate-pulse': player.isPlaying.value }"
+                aria-hidden="true"
               />
             </div>
             <div>
@@ -44,7 +45,7 @@
               title="Lagu sebelumnya"
               @click="player.prevTrack()"
             >
-              <Icon name="material-symbols:skip-previous-rounded" size="16" />
+              <Icon name="material-symbols:skip-previous-rounded" size="16" aria-hidden="true" />
             </button>
             <button
               class="w-10 h-10 rounded-full bg-gradient-to-br from-accent to-purple-500 flex items-center justify-center text-white shadow-[0_4px_12px_rgba(99,102,241,0.35)] transition-all duration-200 cursor-pointer hover:scale-105 hover:shadow-[0_6px_20px_rgba(99,102,241,0.5)] active:scale-95"
@@ -53,6 +54,7 @@
               <Icon
                 :name="player.isPlaying.value ? 'material-symbols:pause-rounded' : 'material-symbols:play-arrow-rounded'"
                 size="22"
+                aria-hidden="true"
               />
             </button>
             <button
@@ -60,7 +62,7 @@
               title="Lagu berikutnya"
               @click="player.nextTrack()"
             >
-              <Icon name="material-symbols:skip-next-rounded" size="16" />
+              <Icon name="material-symbols:skip-next-rounded" size="16" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -117,7 +119,7 @@
               :class="player.currentTrackIndex.value === idx ? 'text-accent' : 'text-text-subtle'"
             >
               <template v-if="player.currentTrackIndex.value === idx && player.isPlaying.value">
-                <Icon name="material-symbols:volume-up-rounded" class="text-sm" />
+                <Icon name="material-symbols:volume-up-rounded" class="text-sm" aria-hidden="true" />
               </template>
               <template v-else>
                 {{ idx + 1 }}
@@ -133,6 +135,7 @@
               name="material-symbols:play-circle-outline-rounded"
               class="text-base opacity-0 group-hover/track:opacity-100 transition-opacity shrink-0"
               :class="{ 'opacity-100 text-accent': player.currentTrackIndex.value === idx }"
+              aria-hidden="true"
             />
           </div>
         </div>
@@ -142,7 +145,7 @@
           v-else-if="!loading"
           class="flex flex-col items-center gap-2 py-6 text-text-muted text-sm"
         >
-          <Icon name="material-symbols:music-off-rounded" class="text-3xl opacity-40" />
+          <Icon name="material-symbols:music-off-rounded" class="text-3xl opacity-40" aria-hidden="true" />
           <span>Tidak ada lagu tersedia</span>
         </div>
       </div>

@@ -15,7 +15,7 @@
       <div class="pl-5 pr-4 py-5 md:pl-6 md:pr-5 md:py-5 ml-0.5">
         <!-- Date -->
         <div class="flex items-center gap-1.5 mb-2.5">
-          <Icon name="material-symbols:calendar-month-rounded" class="text-accent text-sm shrink-0" />
+          <Icon name="material-symbols:calendar-month-rounded" class="text-accent text-sm shrink-0" aria-hidden="true" />
           <small class="text-accent font-bold text-[0.72rem] tracking-wide">
             {{ agenda.end_date
               ? `${formatDate(agenda.start_date)} — ${formatDate(agenda.end_date)}`
