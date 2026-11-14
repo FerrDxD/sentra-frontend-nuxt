@@ -2,40 +2,42 @@
   <div>
     <main class="max-w-[1120px] mx-auto pt-20 md:pt-24 pb-14 px-4 md:px-6">
 
-      <!-- ── Hero ───────────────────────────────────────── -->
-      <header class="text-center mb-9">
-        <span class="inline-flex items-center gap-1.5 bg-accent-soft text-accent text-[0.65rem] font-bold tracking-[0.12em] uppercase px-3 py-1 rounded-full mb-3">
-          <Icon name="material-symbols:diversity-3-rounded" class="text-[0.95rem]" />
+      <!-- ── Masthead ──────────────────────────────────── -->
+      <header class="mb-9 md:mb-11">
+        <span class="inline-flex items-center gap-1.5 bg-accent-soft text-accent text-[0.65rem] font-bold tracking-[0.12em] uppercase px-3 py-1 rounded-full mb-4">
+          <Icon name="material-symbols:diversity-3-rounded" class="text-[0.95rem]" aria-hidden="true" />
           Struktur Organisasi
         </span>
-        <h1 class="text-[clamp(1.8rem,4.5vw,2.4rem)] font-black tracking-tight m-0 mb-2 leading-tight">
+
+        <h1 class="text-[clamp(1.8rem,4.5vw,2.4rem)] font-black tracking-tight m-0 mb-3 leading-tight text-text-main">
           Kabinet
-          <span class="bg-gradient-to-br from-accent to-purple-500 bg-clip-text text-transparent">Nawasena</span>
-          2025/2026
+          <span class="text-accent">Nawasena</span>
+          <span class="text-text-muted font-medium"> 2025/2026</span>
         </h1>
-        <p class="text-[0.95rem] md:text-[1rem] text-text-muted m-0 max-w-[520px] mx-auto leading-relaxed">
-          Susunan pengurus inti dan seksi bidang yang menggerakkan setiap program kerja di SMA Negeri Indonesia.
+
+        <p class="text-[0.95rem] md:text-[1rem] text-text-muted m-0 max-w-[520px] leading-relaxed">
+          Pengurus inti dan seksi bidang yang menggerakkan setiap program kerja di SMA Negeri Indonesia.
         </p>
 
         <!-- Stat chips -->
-        <div v-if="!loading" class="flex items-center justify-center gap-2 mt-5 flex-wrap">
+        <div v-if="!loading" class="flex items-center gap-2 mt-5 flex-wrap">
           <span class="inline-flex items-center gap-1.5 bg-bg-card border border-border text-[0.78rem] font-semibold text-text-main px-3 py-1.5 rounded-full">
-            <Icon name="material-symbols:groups-rounded" class="text-base text-accent" />
+            <Icon name="material-symbols:groups-rounded" class="text-base text-accent" aria-hidden="true" />
             {{ pengurus.length }} Pengurus Inti
           </span>
           <span class="inline-flex items-center gap-1.5 bg-bg-card border border-border text-[0.78rem] font-semibold text-text-main px-3 py-1.5 rounded-full">
-            <Icon name="material-symbols:dashboard-rounded" class="text-base text-accent" />
+            <Icon name="material-symbols:dashboard-rounded" class="text-base text-accent" aria-hidden="true" />
             {{ sekbid.length }} {{ divisionLabel }}
           </span>
           <span class="inline-flex items-center gap-1.5 bg-bg-card border border-border text-[0.78rem] font-semibold text-text-main px-3 py-1.5 rounded-full">
-            <Icon name="material-symbols:badge-rounded" class="text-base text-accent" />
+            <Icon name="material-symbols:badge-rounded" class="text-base text-accent" aria-hidden="true" />
             {{ totalAnggotaCount }} Total Anggota
           </span>
         </div>
       </header>
 
-      <!-- ── Organisation tabs (OSIS / MPK) ──────────────── -->
-      <div class="flex justify-center mb-10">
+      <!-- ── Org tabs ─────────────────────────────────────── -->
+      <div class="mb-9 md:mb-10">
         <div role="tablist" aria-label="Organisasi" class="inline-flex items-center bg-bg-card border border-border rounded-full p-1 gap-0.5 shadow-sm">
           <button
             v-for="tab in orgTabs"
@@ -46,15 +48,13 @@
             class="relative inline-flex items-center gap-1.5 px-4 md:px-5 py-1.5 md:py-2 rounded-full text-[0.78rem] md:text-[0.82rem] font-semibold transition-all duration-200 select-none"
             :class="[
               activeOrg === tab.id && !tab.disabled
-                ? 'bg-gradient-to-br from-accent to-purple-500 text-white shadow-md'
-                : 'text-text-muted',
-              tab.disabled
-                ? 'opacity-55 cursor-not-allowed'
-                : (activeOrg === tab.id ? 'cursor-default' : 'cursor-pointer hover:text-text-main hover:bg-bg-card-2'),
+                ? 'bg-accent text-white shadow-sm'
+                : 'bg-transparent text-text-muted',
+              tab.disabled ? 'opacity-55 cursor-not-allowed' : (activeOrg === tab.id ? 'cursor-default' : 'cursor-pointer hover:text-text-main hover:bg-bg-card-2'),
             ]"
             @click="!tab.disabled && setActiveOrg(tab.id)"
           >
-            <Icon :name="tab.icon" class="text-base" />
+            <Icon :name="tab.icon" class="text-base" aria-hidden="true" />
             {{ tab.label }}
             <span
               v-if="tab.disabled"
@@ -64,11 +64,10 @@
         </div>
       </div>
 
-      <!-- ── Content area ───────────────────────────────── -->
-      <!-- Empty state when MPK is selected (no data yet) -->
+      <!-- ── Empty state (MPK belum ada data) ──────────── -->
       <div v-if="!loading && pengurus.length === 0 && sekbid.length === 0" class="text-center py-14">
         <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent-soft text-accent mb-4">
-          <Icon name="material-symbols:hourglass-top-rounded" class="text-[40px]" />
+          <Icon name="material-symbols:hourglass-top-rounded" class="text-[40px]" aria-hidden="true" />
         </div>
         <h3 class="text-[1.15rem] font-bold text-text-main m-0 mb-1.5">Sedang Disiapkan</h3>
         <p class="text-[0.9rem] text-text-muted m-0 max-w-md mx-auto leading-relaxed">
@@ -77,7 +76,8 @@
       </div>
 
       <template v-else>
-        <!-- ── Pengurus Inti ───────────────────────────── -->
+
+        <!-- ── Pengurus Inti ──────────────────────────── -->
         <section>
           <div class="flex items-end justify-between mb-5 md:mb-6">
             <h2 class="text-[1.1rem] md:text-[1.25rem] font-extrabold text-text-main m-0 leading-tight">Pengurus Inti</h2>
@@ -103,12 +103,11 @@
               :is-featured="isFeatured(p)"
               @click="openPengurusModal(p)"
             />
-
           </div>
           <p v-else class="text-[0.9rem] text-text-muted text-center py-6">Belum ada pengurus inti.</p>
         </section>
 
-        <!-- ── Sekbid (OSIS) / Komisi (MPK) ────────────── -->
+        <!-- ── Sekbid / Komisi ────────────────────────── -->
         <section class="mt-14 md:mt-16">
           <div class="flex items-end justify-between mb-5 md:mb-6">
             <div>
@@ -137,22 +136,24 @@
           </div>
           <p v-else class="text-[0.9rem] text-text-muted text-center py-6">Belum ada seksi bidang.</p>
         </section>
+
       </template>
 
-      <!-- ── HoF link ────────────────────────────────── -->
+      <!-- ── HoF link ──────────────────────────────────── -->
       <div class="text-center mt-14 md:mt-16">
         <NuxtLink
           to="/hof"
           class="inline-flex items-center gap-2 no-underline text-[0.92rem] font-semibold text-text-main bg-bg-card border border-border rounded-full px-6 py-3 transition-all hover:-translate-y-0.5 hover:shadow-md hover:border-accent hover:text-accent"
         >
-          <Icon name="material-symbols:star-rounded" class="text-[1.2rem] text-accent" />
+          <Icon name="material-symbols:star-rounded" class="text-[1.2rem] text-accent" aria-hidden="true" />
           Hall of Fame Kepengurusan
-          <Icon name="material-symbols:arrow-forward-rounded" class="text-[1rem] opacity-60" />
+          <Icon name="material-symbols:arrow-forward-rounded" class="text-[1rem] opacity-60" aria-hidden="true" />
         </NuxtLink>
       </div>
+
     </main>
 
-    <!-- Modals (rendered via Teleport inside each component) -->
+    <!-- Modals -->
     <StrukturPengurusModal />
     <StrukturSekbidModal />
   </div>
@@ -174,7 +175,6 @@ const {
   openSekbidModal,
 } = useStruktur()
 
-// Label dinamis OSIS Sekbid vs MPK Komisi
 const divisionLabel = computed(() =>
   activeOrg.value === 'mpk' ? 'Komisi' : 'Seksi Bidang',
 )
@@ -186,13 +186,11 @@ const divisionTagline = computed(() =>
 
 useSeoMeta({
   title: 'Struktur Organisasi',
-  description: 'Susunan pengurus inti dan 10 seksi bidang Kabinet Nawasena 2025/2026 — siapa saja yang menggerakkan setiap program kerja OSIS.',
+  description: 'Susunan pengurus inti dan 10 seksi bidang Kabinet Nawasena 2025/2026 — SMAN 2 Jonggol. siapa saja yang menggerakkan setiap program kerja OSIS.',
   ogTitle: 'Struktur Organisasi — OSPK Nawasena',
-  ogDescription: 'Pengurus inti dan seksi bidang Kabinet Nawasena 2025/2026.',
+  ogDescription: 'Pengurus inti dan seksi bidang Kabinet Nawasena 2025/2026 — SMAN 2 Jonggol.',
 })
 
-// Ketua Umum (OSIS) atau Ketua MPK → featured HANYA kalau ada motto
-// Pakai regex /^ketua/i biar cocok dg apapun namanya di DB (Ketua Umum / Ketua MPK / Ketua)
 const isFeatured = (p: { jabatan?: string; motto?: string }) =>
   !!p.jabatan && /^ketua/i.test(p.jabatan) && !!p.motto
 
