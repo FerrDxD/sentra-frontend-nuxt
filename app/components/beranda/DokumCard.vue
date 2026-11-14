@@ -36,7 +36,7 @@
           v-if="isFeatured"
           class="absolute top-3 right-3 bg-amber-400/90 backdrop-blur-sm text-amber-900 text-[0.6rem] font-black tracking-wider uppercase px-2 py-0.5 rounded-full flex items-center gap-1"
         >
-          <Icon name="material-symbols:star-rounded" class="text-xs" />
+          <Icon name="material-symbols:star-rounded" class="text-xs" aria-hidden="true" />
           Pilihan
         </span>
       </div>
@@ -44,7 +44,7 @@
       <!-- Body -->
       <div class="p-4 flex flex-col flex-1 gap-1.5">
         <span class="text-[0.68rem] font-bold text-accent uppercase tracking-widest flex items-center gap-1">
-          <Icon name="material-symbols:calendar-today-rounded" class="text-xs" />
+          <Icon name="material-symbols:calendar-today-rounded" class="text-xs" aria-hidden="true" />
           {{ formatDate(ev.start_date) }}
         </span>
         <h3
@@ -60,6 +60,7 @@
           <Icon
             name="material-symbols:arrow-forward"
             class="text-[0.95rem] transition-transform duration-200 group-hover:translate-x-1"
+            aria-hidden="true"
           />
         </span>
       </div>

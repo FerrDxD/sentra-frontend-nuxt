@@ -20,7 +20,7 @@
         <div
           class="shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-purple-500 flex items-center justify-center shadow-[0_8px_25px_rgba(99,102,241,0.4)]"
         >
-          <Icon name="material-symbols:mail-rounded" class="text-white text-3xl" />
+          <Icon name="material-symbols:mail-rounded" class="text-white text-3xl" aria-hidden="true" />
         </div>
 
         <div class="flex-1 text-center md:text-left relative z-10">
@@ -37,7 +37,7 @@
           class="inline-flex items-center gap-2 bg-gradient-to-br from-accent to-purple-500 text-white px-5 py-2.5 rounded-xl font-bold text-[0.9rem] no-underline transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(99,102,241,0.45)] active:scale-95"
           @click="openAurora"
           >
-            <Icon name="material-symbols:edit-rounded" size="18" />
+            <Icon name="material-symbols:edit-rounded" size="18" aria-hidden="true" />
             Isi Sekarang
           </button>
         </div>

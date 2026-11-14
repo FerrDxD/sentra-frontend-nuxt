@@ -37,7 +37,7 @@
               v-else-if="agendas.length === 0"
               class="flex flex-col items-center gap-3 py-12 bg-bg-card border border-dashed border-border rounded-2xl text-text-muted"
             >
-              <Icon name="material-symbols:calendar-today-rounded" class="text-4xl opacity-40" />
+              <Icon name="material-symbols:calendar-today-rounded" class="text-4xl opacity-40" aria-hidden="true" />
               <p class="text-sm">Belum ada agenda mendatang.</p>
             </div>
             <div v-else class="flex flex-col gap-3">
@@ -76,7 +76,7 @@
               to="/program"
               class="flex items-center gap-1.5 text-sm font-bold text-accent px-3 py-1.5 rounded-lg border border-accent-soft bg-accent-soft hover:bg-accent/15 transition-colors no-underline"
             >
-              Lihat semua <Icon name="material-symbols:arrow-forward" class="text-base" />
+              Lihat semua <Icon name="material-symbols:arrow-forward" class="text-base" aria-hidden="true" />
             </NuxtLink>
           </template>
         </BerandaSectionHeader>
@@ -92,7 +92,7 @@
           v-else-if="programHighlights.length === 0"
           class="flex flex-col items-center gap-3 py-12 bg-bg-card border border-dashed border-border rounded-2xl text-text-muted"
         >
-          <Icon name="material-symbols:assignment-rounded" class="text-4xl opacity-40" />
+          <Icon name="material-symbols:assignment-rounded" class="text-4xl opacity-40" aria-hidden="true" />
           <p class="text-sm">Belum ada program kerja.</p>
         </div>
         <div v-else class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -118,7 +118,7 @@
               to="/dokumentasi"
               class="flex items-center gap-1.5 text-sm font-bold text-accent px-3 py-1.5 rounded-lg border border-accent-soft bg-accent-soft hover:bg-accent/15 transition-colors no-underline"
             >
-              Lihat semua <Icon name="material-symbols:arrow-forward" class="text-base" />
+              Lihat semua <Icon name="material-symbols:arrow-forward" class="text-base" aria-hidden="true" />
             </NuxtLink>
           </template>
         </BerandaSectionHeader>
@@ -134,7 +134,7 @@
           v-else-if="dokumHighlights.length === 0"
           class="flex flex-col items-center gap-3 py-12 bg-bg-card border border-dashed border-border rounded-2xl text-text-muted"
         >
-          <Icon name="material-symbols:folder-open-rounded" class="text-4xl opacity-40" />
+          <Icon name="material-symbols:folder-open-rounded" class="text-4xl opacity-40" aria-hidden="true" />
           <p class="text-sm">Belum ada dokumentasi yang dipublikasikan.</p>
         </div>
         <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min">

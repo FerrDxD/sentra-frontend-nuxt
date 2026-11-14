@@ -9,7 +9,7 @@
       <span
         class="inline-flex items-center gap-1.5 text-[0.7rem] font-bold tracking-widest uppercase text-accent bg-accent-soft border border-accent/20 px-3 py-1 rounded-full"
       >
-        <Icon v-if="icon" :name="icon" class="text-sm" />
+        <Icon v-if="icon" :name="icon" class="text-sm" aria-hidden="true" />
         {{ label }}
       </span>
     </div>
