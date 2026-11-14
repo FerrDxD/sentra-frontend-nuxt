@@ -2,50 +2,34 @@
   <div>
     <main class="max-w-[1120px] mx-auto pt-20 md:pt-24 pb-14 px-4 md:px-6">
 
-      <!-- ── Hero header ──────────────────────────────────── -->
-      <header class="text-center mb-9">
-        <span class="inline-flex items-center gap-1.5 bg-accent-soft text-accent text-[0.65rem] font-bold tracking-[0.12em] uppercase px-3 py-1 rounded-full mb-3">
+      <!-- ── Hero header — left-aligned masthead ─────────────────── -->
+      <header class="mb-10 md:mb-14">
+        <span class="inline-flex items-center gap-1.5 bg-accent-soft text-accent text-[0.65rem] font-bold tracking-[0.12em] uppercase px-3 py-1 rounded-full mb-4">
           <Icon name="material-symbols:assignment-rounded" class="text-[0.95rem]" />
           Program Kerja
         </span>
-        <h1 class="text-[clamp(1.8rem,4.5vw,2.4rem)] font-black tracking-tight m-0 mb-2 leading-tight">
+
+        <h1 class="text-[clamp(2.4rem,6vw,3.4rem)] font-black tracking-[-0.035em] leading-[1.02] text-text-main m-0 mb-5">
           Inisiatif
-          <span class="bg-gradient-to-br from-accent to-purple-500 bg-clip-text text-transparent">Nawasena</span>
+          <span class="text-accent">Nawasena</span>
         </h1>
-        <p class="text-[0.95rem] md:text-[1rem] text-text-muted m-0 max-w-[520px] mx-auto leading-relaxed">
-          Target pencapaian dan status pelaksanaan program kerja OSIS-MPK Nawasena 2025/2026.
+
+        <p class="text-[1rem] md:text-[1.1rem] text-text-muted max-w-[640px] leading-relaxed m-0 mb-6">
+          Target capaian dan status pelaksanaan program kerja OSIS-MPK Nawasena 2025/2026.
         </p>
+
+        <div class="flex items-center gap-2.5 text-[0.72rem] font-semibold text-text-subtle uppercase tracking-[0.08em]">
+          <span class="inline-flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#22c55e]"></span>
+            {{ programCountLabel }}
+          </span>
+          <span class="text-border">·</span>
+          <span>{{ filteredPrograms.length }} program tercatat</span>
+        </div>
       </header>
 
-      <!-- ── Stats Dashboard (chart + numbers) ────────────── -->
-      <div v-if="loading" class="bg-bg-card border border-border rounded-2xl p-4 md:p-7 mb-8">
-        <!-- Mobile skeleton -->
-        <div class="md:hidden">
-          <div class="flex items-center gap-4">
-            <div class="w-[120px] h-[120px] shrink-0 rounded-full skeleton-shimmer border border-border"></div>
-            <div class="flex-1 space-y-3">
-              <div class="h-8 w-24 rounded-lg skeleton-shimmer border border-border"></div>
-              <div class="h-3 w-32 rounded skeleton-shimmer border border-border"></div>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-2 mt-3">
-            <div v-for="i in 3" :key="i" class="h-11 rounded-xl skeleton-shimmer border border-border"></div>
-          </div>
-        </div>
-        <!-- Desktop skeleton -->
-        <div class="hidden md:grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 lg:gap-8 items-center">
-          <div class="flex justify-center">
-            <div class="w-[220px] h-[220px] rounded-full skeleton-shimmer border border-border"></div>
-          </div>
-          <div class="space-y-3">
-            <div class="h-16 rounded-xl skeleton-shimmer border border-border"></div>
-            <div class="grid grid-cols-2 gap-2.5">
-              <div v-for="i in 3" :key="i" class="h-12 rounded-xl skeleton-shimmer border border-border"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <ProgramProkerStats v-else :programs="programs" v-model:active-filter="filter" />
+      <!-- ── Stats Dashboard (mission control) ────────────── -->
+      <ProgramProkerStats v-if="!loading" :programs="programs" v-model:active-filter="filter" />
 
       <!-- ── Filter + Grid section ────────────────────────── -->
       <section>
@@ -56,12 +40,10 @@
           </span>
         </div>
 
-        <!-- Filter Tabs -->
         <ProgramProkerFilterTabs v-model="filter" />
 
-        <!-- Program Grid -->
         <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div v-for="i in 9" :key="i" class="h-[174px] rounded-2xl bg-gradient-to-r from-[var(--bg-card)] via-[var(--bg-card-2)] to-[var(--bg-card)] bg-[length:800px_100%] animate-[skeletonShimmer_1.5s_infinite_linear] border border-border"></div>
+          <div v-for="i in 9" :key="i" class="h-[174px] rounded-2xl border border-border bg-[var(--bg-card)] animate-pulse"></div>
         </div>
         <div v-else-if="filteredPrograms.length === 0" class="text-center py-14">
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-bg-card-2 border border-border text-text-subtle mb-3">
@@ -78,13 +60,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useProgram } from '~/composables/useProgram'
 
 const { loading, programs, filter, filteredPrograms, loadPrograms } = useProgram()
 
+const programCountLabel = computed(() => {
+  const total = programs.value.length
+  if (loading.value) return 'Memetakan program kerja…'
+  if (total === 0) return 'Belum ada program tercatat'
+  return `${total} program tercatat untuk kabinet 2025/2026`
+})
+
 useSeoMeta({
   title: 'Program Kerja',
-  description: 'Daftar program kerja, target capaian, dan status pelaksanaan kabinet OSIS-MPK Nawasena 2025/2026.',
+  description: 'Daftar program kerja, target capaian, dan status pelaksanaan program kerja OSIS-MPK Nawasena 2025/2026.',
   ogTitle: 'Program Kerja — OSPK Nawasena',
   ogDescription: 'Daftar program kerja kabinet OSIS-MPK Nawasena 2025/2026.',
 })
@@ -93,15 +83,3 @@ onMounted(() => {
   loadPrograms()
 })
 </script>
-
-<style>
-@keyframes skeletonShimmer {
-  0% { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-}
-.skeleton-shimmer {
-  background: linear-gradient(to right, var(--bg-card) 0%, var(--bg-card-2) 50%, var(--bg-card) 100%);
-  background-size: 800px 100%;
-  animation: skeletonShimmer 1.5s infinite linear;
-}
-</style>
